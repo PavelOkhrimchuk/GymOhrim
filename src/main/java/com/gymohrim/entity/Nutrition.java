@@ -17,9 +17,11 @@ import java.util.UUID;
 public class Nutrition {
 
 
+
     @Id
-    @GeneratedValue
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
 
 
 

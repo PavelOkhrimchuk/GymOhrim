@@ -18,8 +18,9 @@ public class Workout {
 
 
     @Id
-    @GeneratedValue
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
 
 
     @ManyToOne

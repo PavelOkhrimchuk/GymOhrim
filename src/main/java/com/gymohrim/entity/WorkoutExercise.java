@@ -17,8 +17,9 @@ import java.util.UUID;
 public class WorkoutExercise {
 
     @Id
-    @GeneratedValue
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
 
 
     @ManyToOne

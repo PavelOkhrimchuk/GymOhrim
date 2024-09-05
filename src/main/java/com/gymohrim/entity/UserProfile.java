@@ -20,8 +20,9 @@ public class UserProfile {
 
 
     @Id
-    @GeneratedValue
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
 
 
     @OneToOne
