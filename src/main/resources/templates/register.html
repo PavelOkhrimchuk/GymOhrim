@@ -6,19 +6,22 @@
 <body>
 <h2>Register</h2>
 <form th:action="@{/register}" th:object="${user}" method="post">
+    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</div>
     <label for="name">Name:</label>
     <input type="text" id="name" th:field="*{name}" required/><br/>
 
+    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</div>
     <label for="email">Email:</label>
     <input type="email" id="email" th:field="*{email}" required/><br/>
 
+    <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</div>
     <label for="password">Password:</label>
     <input type="password" id="password" th:field="*{password}" required/><br/>
 
     <button type="submit">Register</button>
 </form>
 
-<!-- Если пользователь уже зарегистрирован, показываем кнопку для перехода на страницу логина -->
 <a href="/login">Go to Login</a>
+
 </body>
 </html>
