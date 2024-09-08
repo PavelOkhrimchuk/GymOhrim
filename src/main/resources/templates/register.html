@@ -1,18 +1,24 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Register</title>
+    <title>Registration</title>
 </head>
 <body>
 <h2>Register</h2>
-<form th:action="@{/register}" method="post" th:object="${user}">
-    <label for="email">Email:</label>
-    <input type="email" id="email" th:field="*{email}" required/><br/>
+<form th:action="@{/register}" th:object="${user}" method="post">
     <label for="name">Name:</label>
     <input type="text" id="name" th:field="*{name}" required/><br/>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" th:field="*{email}" required/><br/>
+
     <label for="password">Password:</label>
     <input type="password" id="password" th:field="*{password}" required/><br/>
+
     <button type="submit">Register</button>
 </form>
+
+<!-- Если пользователь уже зарегистрирован, показываем кнопку для перехода на страницу логина -->
+<a href="/login">Go to Login</a>
 </body>
 </html>

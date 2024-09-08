@@ -2,6 +2,7 @@ package com.gymohrim.controller;
 
 import com.gymohrim.entity.User;
 import com.gymohrim.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -11,17 +12,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
+@RequiredArgsConstructor
 public class AuthController {
 
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-
-    private final UserRepository repository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    public AuthController(UserRepository repository) {
-        this.repository = repository;
+    @GetMapping("/")
+    public String redirectToRegister() {
+        return "redirect:/register";
     }
 
     @GetMapping("/register")
@@ -31,13 +30,9 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("user") User user, Model model) {
-        if (repository.findByEmail(user.getEmail()).isPresent()) {
-            model.addAttribute("error", "Email is already registered.");
-            return "register";
-        }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        repository.save(user);
+    public String registerUser(@ModelAttribute User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // шифрование пароля
+        userRepository.save(user);
         return "redirect:/login";
     }
 
@@ -45,4 +40,13 @@ public class AuthController {
     public String showLoginForm() {
         return "login";
     }
+
+    @GetMapping("/profile")
+    public String showProfile() {
+        return "profile";
+    }
 }
+
+
+
+
