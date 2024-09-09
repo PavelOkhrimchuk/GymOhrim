@@ -27,7 +27,13 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                .headers(headers -> headers
+                        .contentSecurityPolicy(policy -> policy
+                                .policyDirectives("script-src 'self'; object-src 'none'; style-src 'self'; base-uri 'self'")
+                        )
+                )
+                .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .requireCsrfProtectionMatcher(request -> request.isSecure()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/register", "/login").permitAll()
                         .anyRequest().authenticated()
