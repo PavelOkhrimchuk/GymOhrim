@@ -1,5 +1,6 @@
 package com.gymohrim.configuration;
 
+import com.gymohrim.service.OAuth2UserServiceImpl;
 import com.gymohrim.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -23,17 +24,20 @@ public class SecurityConfiguration {
 
 
     private final UserDetailsServiceImpl customUserDetailsService;
+    private final OAuth2UserServiceImpl oAuth2UserService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .requiresChannel(channel -> channel.anyRequest().requiresSecure())
                 .headers(headers -> headers
                         .contentSecurityPolicy(policy -> policy
                                 .policyDirectives("script-src 'self'; object-src 'none'; style-src 'self'; base-uri 'self'")
                         )
                 )
-                .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .requireCsrfProtectionMatcher(request -> request.isSecure()))
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/register", "/login").permitAll()
                         .anyRequest().authenticated()
@@ -43,6 +47,9 @@ public class SecurityConfiguration {
                         .defaultSuccessUrl("/profile", true)
                         .permitAll()
                 )
+                .oauth2Login(oauth2 -> oauth2.loginPage("/login")
+                        .defaultSuccessUrl("/profile", true)
+                        .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService)))
                 .logout(LogoutConfigurer::permitAll)
                 .build();
     }
