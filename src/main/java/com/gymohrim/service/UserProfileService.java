@@ -27,10 +27,29 @@ public class UserProfileService {
         return userProfileRepository.findByUser(user);
     }
 
-    public UserProfile saveUserProfile(UserProfile userProfile) {
-        return userProfileRepository.save(userProfile);
+    public UserProfile saveOrUpdateUserProfile(UserProfile userProfile) {
 
+        if (userProfile.getId() != null && userProfileRepository.existsById(userProfile.getId())) {
+            return userProfileRepository.save(userProfile);
+        }
+
+
+        Optional<UserProfile> existingProfile = userProfileRepository.findByUser(userProfile.getUser());
+        if (existingProfile.isPresent()) {
+            UserProfile existing = existingProfile.get();
+
+            existing.setWeight(userProfile.getWeight());
+            existing.setHeight(userProfile.getHeight());
+            existing.setGender(userProfile.getGender());
+            existing.setBirthDate(userProfile.getBirthDate());
+            existing.setProfilePictureUrl(userProfile.getProfilePictureUrl());
+            return userProfileRepository.save(existing);
+        }
+
+        // В противном случае, создайте новый профиль
+        return userProfileRepository.save(userProfile);
     }
+
 
     public void deleteUserProfile(UserProfile userProfile) {
         userProfileRepository.delete(userProfile);
