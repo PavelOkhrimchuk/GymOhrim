@@ -2,11 +2,10 @@ package com.gymohrim.entity;
 
 
 import jakarta.persistence.*;
-import jdk.jfr.Name;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
-import java.util.UUID;
 
 @Entity
 @Builder
@@ -38,5 +37,6 @@ public class UserProfile {
     @Column(name = "profile_picture_url")
     private String profilePictureUrl;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birthDate;
 }

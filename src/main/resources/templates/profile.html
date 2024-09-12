@@ -1,13 +1,41 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
 </head>
 <body>
-<h2>Добро пожаловать!</h2>
+<h1>Profile</h1>
+<form action="/profile" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <label for="weight">Weight:</label>
+    <input type="text" id="weight" name="weight" th:value="${profile.weight}"><br>
+
+    <label for="height">Height:</label>
+    <input type="text" id="height" name="height" th:value="${profile.height}"><br>
+
+    <label for="gender">Gender:</label>
+    <input type="text" id="gender" name="gender" th:value="${profile.gender}"><br>
+
+    <label for="birthDate">Birth Date:</label>
+    <input type="date" id="birthDate" name="birthDate" th:value="${#dates.format(profile.birthDate, 'yyyy-MM-dd')}"><br>
+
+    <label for="profilePictureUrl">Profile Picture URL:</label>
+    <input type="text" id="profilePictureUrl" name="profilePictureUrl" th:value="${profile.profilePictureUrl}"><br>
+
+    <button type="submit">Change</button>
+</form>
+
+<form action="/profile/delete" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <button type="submit">Delete Profile</button>
+</form>
+
 <form action="/logout" method="post">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
     <button type="submit">Logout</button>
 </form>
+
 </body>
 </html>
