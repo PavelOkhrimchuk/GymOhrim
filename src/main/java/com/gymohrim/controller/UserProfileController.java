@@ -3,6 +3,7 @@ package com.gymohrim.controller;
 
 import com.gymohrim.entity.User;
 import com.gymohrim.entity.UserProfile;
+import com.gymohrim.service.FileStorageService;
 import com.gymohrim.service.UserProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,10 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequiredArgsConstructor
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class UserProfileController {
 
     private final UserProfileService userProfileService;
+    private final FileStorageService fileStorageService;
 
     @GetMapping
     public String showProfile(@AuthenticationPrincipal UserDetails userDetails, Model model) {
@@ -34,13 +34,21 @@ public class UserProfileController {
 
     @PostMapping
     public String updateProfile(@ModelAttribute("profile") @Valid UserProfile userProfile,
-                                @AuthenticationPrincipal UserDetails userDetails, BindingResult bindingResult) {
+                                @AuthenticationPrincipal UserDetails userDetails,
+                                BindingResult bindingResult,
+                                @RequestParam("profilePicture") MultipartFile profilePicture) throws Exception {
         if (bindingResult.hasErrors()) {
             return "profile";
         }
 
         User user = userProfileService.findByEmail(userDetails.getUsername());
         userProfile.setUser(user);
+
+        if (!profilePicture.isEmpty()) {
+            String fileName = "profile_" + user.getId();
+            String fileUrl = fileStorageService.uploadFile(profilePicture, fileName);
+            userProfile.setProfilePictureUrl(fileUrl);
+        }
 
         userProfileService.saveOrUpdateUserProfile(userProfile);
 
