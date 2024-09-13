@@ -41,7 +41,7 @@ public class UserProfile {
     private String gender;
 
     //@URL
-    @Column(name = "profile_picture_url")
+    @Column(name = "profile_picture_url", length = 1000)
     private String profilePictureUrl;
 
     @Past
