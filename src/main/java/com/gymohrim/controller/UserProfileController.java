@@ -36,7 +36,8 @@ public class UserProfileController {
     public String updateProfile(@ModelAttribute("profile") @Valid UserProfile userProfile,
                                 @AuthenticationPrincipal UserDetails userDetails,
                                 BindingResult bindingResult,
-                                @RequestParam("profilePicture") MultipartFile profilePicture) throws Exception {
+                                @RequestParam("profilePicture") MultipartFile profilePicture,
+                                Model model) throws Exception {
         if (bindingResult.hasErrors()) {
             return "profile";
         }
@@ -44,16 +45,26 @@ public class UserProfileController {
         User user = userProfileService.findByEmail(userDetails.getUsername());
         userProfile.setUser(user);
 
+
+        UserProfile existingProfile = userProfileService.getUserProfile(user)
+                .orElse(new UserProfile());
+
+
         if (!profilePicture.isEmpty()) {
             String fileName = "profile_" + user.getId();
             String fileUrl = fileStorageService.uploadFile(profilePicture, fileName);
             userProfile.setProfilePictureUrl(fileUrl);
+        } else {
+
+            userProfile.setProfilePictureUrl(existingProfile.getProfilePictureUrl());
         }
 
         userProfileService.saveOrUpdateUserProfile(userProfile);
 
         return "redirect:/profile";
     }
+
+
 
     @PostMapping("/delete")
     public String deleteProfile(@AuthenticationPrincipal UserDetails userDetails) {
