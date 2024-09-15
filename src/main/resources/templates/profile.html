@@ -19,17 +19,23 @@
 
     <div th:if="${#fields.hasErrors('weight')}" th:errors="*{weight}">Weight Error</div>
     <label for="weight">Weight (kg):</label>
-    <input type="number" id="weight" th:field="*{weight}" step="0.1" min="0" required /><br/>
+    <input type="number" id="weight" th:field="*{weight}" step="1" min="0" required /><br/>
 
 
     <div th:if="${#fields.hasErrors('height')}" th:errors="*{height}">Height Error</div>
     <label for="height">Height (cm):</label>
-    <input type="number" id="height" th:field="*{height}" step="0.1" min="0" required /><br/>
+    <input type="number" id="height" th:field="*{height}" step="1" min="0" required /><br/>
 
 
     <div th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}">Gender Error</div>
     <label for="gender">Gender:</label>
-    <input type="text" id="gender" th:field="*{gender}"/><br/>
+    <select id="gender" th:field="*{gender}" required>
+        <option value="" disabled selected>Select your gender</option>
+        <option value="man" th:selected="${profile.gender == 'man'}">Man</option>
+        <option value="woman" th:selected="${profile.gender == 'woman'}">Woman</option>
+        <option value="other" th:selected="${profile.gender == 'other'}">Other</option>
+    </select><br/>
+
 
 
     <div th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}">Birth Date Error</div>
