@@ -1,4 +1,4 @@
-package com.gymohrim.service;
+package com.gymohrim.service.user;
 
 
 import com.gymohrim.entity.User;
@@ -46,7 +46,6 @@ public class UserProfileService {
             return userProfileRepository.save(existing);
         }
 
-        // В противном случае, создайте новый профиль
         return userProfileRepository.save(userProfile);
     }
 

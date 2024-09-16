@@ -4,7 +4,7 @@ package com.gymohrim.controller;
 import com.gymohrim.entity.User;
 import com.gymohrim.entity.UserProfile;
 import com.gymohrim.service.FileStorageService;
-import com.gymohrim.service.UserProfileService;
+import com.gymohrim.service.user.UserProfileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

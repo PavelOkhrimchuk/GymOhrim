@@ -1,15 +1,12 @@
-package com.gymohrim.service;
+package com.gymohrim.service.user;
 
 import com.gymohrim.entity.User;
 import com.gymohrim.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 
 
 @Service
