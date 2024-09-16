@@ -55,10 +55,7 @@ public class AuthController {
         return "login";
     }
 
-    @GetMapping("/profile")
-    public String showProfile() {
-        return "profile";
-    }
+
 }
 
 

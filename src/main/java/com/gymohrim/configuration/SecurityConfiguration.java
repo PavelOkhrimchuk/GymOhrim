@@ -1,7 +1,7 @@
 package com.gymohrim.configuration;
 
-import com.gymohrim.service.OAuth2UserServiceImpl;
-import com.gymohrim.service.UserDetailsServiceImpl;
+import com.gymohrim.service.user.OAuth2UserServiceImpl;
+import com.gymohrim.service.user.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
