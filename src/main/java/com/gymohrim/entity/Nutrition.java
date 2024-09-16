@@ -4,9 +4,6 @@ package com.gymohrim.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
-import java.util.UUID;
-
 @Entity
 @Builder
 @AllArgsConstructor
@@ -22,15 +19,9 @@ public class Nutrition {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-
-
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @Temporal(TemporalType.DATE)
-    private Date date;
+    @OneToOne
+    @JoinColumn(name = "daily_record_id", nullable = false)
+    private DailyRecord dailyRecord;
 
     private Integer calories;
     private Double protein;
