@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Date</title>
+
+     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
+</head>
+<body>
+
+<h1>Select a Date</h1>
+
+
+<div id='calendar'></div>
+
+
+<form th:action="@{/calendar/submit}" method="post">
+
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+
+    <input type="hidden" id="selectedDate" name="selectedDate" required/><br/><br/>
+
+    <button type="submit">Submit</button>
+</form>
+
+
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            selectable: true,
+
+
+            dateClick: function(info) {
+
+                document.getElementById('selectedDate').value = info.dateStr;
+
+
+                alert("Selected date: " + info.dateStr);
+            }
+        });
+
+
+        calendar.render();
+    });
+</script>
+
+</body>
+</html>
