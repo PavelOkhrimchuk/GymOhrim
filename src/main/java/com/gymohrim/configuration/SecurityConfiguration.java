@@ -30,11 +30,11 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .requiresChannel(channel -> channel.anyRequest().requiresSecure())
-                .headers(headers -> headers
-                        .contentSecurityPolicy(policy -> policy
-                                .policyDirectives("script-src 'self'; object-src 'none'; style-src 'self'; base-uri 'self'")
-                        )
-                )
+//                .headers(headers -> headers
+//                        .contentSecurityPolicy(policy -> policy
+//                                .policyDirectives("script-src 'self'; object-src 'none'; style-src 'self'; base-uri 'self'")
+//                        )
+//                )
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 )
