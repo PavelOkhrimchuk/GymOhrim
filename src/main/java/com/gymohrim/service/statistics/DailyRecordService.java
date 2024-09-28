@@ -23,6 +23,10 @@ public class DailyRecordService {
         dailyRecordRepository.save(dailyRecord);
     }
 
+    public boolean existsByDateAndUser(Date date, User user) {
+       return dailyRecordRepository.findByDateAndUser(date, user).isPresent();
+    }
+
 
 
     

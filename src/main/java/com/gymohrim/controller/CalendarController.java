@@ -39,9 +39,15 @@ public class CalendarController {
             Date date = dateFormat.parse(selectedDate);
 
             User user = userProfileService.findByEmail(userDetails.getUsername());
+
+            if(dailyRecordService.existsByDateAndUser(date, user)) {
+                return "redirect:/daily-record";
+            }
+
             dailyRecordService.saveDailyRecord(date, user);
 
-            return "redirect:/profile";
+
+            return "redirect:/daily-record";
 
         } catch (ParseException e) {
             model.addAttribute("error", "Invalid date format");
