@@ -27,10 +27,11 @@ public class UserProfileService {
         return userProfileRepository.findByUser(user);
     }
 
-    public UserProfile saveOrUpdateUserProfile(UserProfile userProfile) {
+    public void saveOrUpdateUserProfile(UserProfile userProfile) {
 
         if (userProfile.getId() != null && userProfileRepository.existsById(userProfile.getId())) {
-            return userProfileRepository.save(userProfile);
+            userProfileRepository.save(userProfile);
+            return;
         }
 
 
@@ -43,16 +44,18 @@ public class UserProfileService {
             existing.setGender(userProfile.getGender());
             existing.setBirthDate(userProfile.getBirthDate());
             existing.setProfilePictureUrl(userProfile.getProfilePictureUrl());
-            return userProfileRepository.save(existing);
+            userProfileRepository.save(existing);
+            return;
         }
 
-        return userProfileRepository.save(userProfile);
+        userProfileRepository.save(userProfile);
     }
 
 
     public void deleteUserProfile(UserProfile userProfile) {
         userProfileRepository.delete(userProfile);
     }
+
 
 
 }

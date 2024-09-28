@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +22,18 @@ public class DailyRecordService {
                 .build();
 
         dailyRecordRepository.save(dailyRecord);
+    }
+
+    public boolean existsByDateAndUser(Date date, User user) {
+       return dailyRecordRepository.findByDateAndUser(date, user).isPresent();
+    }
+
+    public Optional<DailyRecord> findByDateAndUser(Date date, User user) {
+        return dailyRecordRepository.findByDateAndUser(date, user);
+    }
+
+    public DailyRecord findById(Integer id) {
+        return dailyRecordRepository.findById(id).orElseThrow(() -> new RuntimeException("Record not found"));
     }
 
 
