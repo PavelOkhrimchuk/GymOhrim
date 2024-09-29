@@ -4,8 +4,6 @@ package com.gymohrim.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.UUID;
-
 @Entity
 @Builder
 @AllArgsConstructor
@@ -24,4 +22,6 @@ public class Exercise {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    private String muscleGroup;
 }
