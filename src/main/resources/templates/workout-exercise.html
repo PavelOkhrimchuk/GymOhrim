@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Exercises to Workout</title>
+</head>
+<body>
+<h1>Add Exercises to Workout</h1>
+
+
+<form th:action="@{/workout-exercise(workoutId=${workoutId})}" method="post">
+    <input type="hidden" name="workoutId" th:value="${workoutId}"/>
+
+
+    <label for="exercise">Exercise:</label>
+    <select name="exercise.id" id="exercise" required>
+        <option th:each="exercise : ${exercises}" th:value="${exercise.id}" th:text="${exercise.name}"></option>
+    </select>
+    <br/><br/>
+
+
+    <label for="sets">Sets:</label>
+    <input type="number" name="sets" id="sets" min="1" th:value="${workoutExercise.sets}" required/><br/><br/>
+
+    <label for="reps">Reps:</label>
+    <input type="number" name="reps" id="reps" min="1" th:value="${workoutExercise.reps}" required/><br/><br/>
+
+    <label for="weight">Weight (kg):</label>
+    <input type="number" name="weight" id="weight" step="0.1" min="0" th:value="${workoutExercise.weight}"
+           required/><br/><br/>
+
+    <button type="submit">Add Exercise</button>
+</form>
+
+<h2>Added Exercises</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Exercise</th>
+        <th>Sets</th>
+        <th>Reps</th>
+        <th>Weight (kg)</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="workoutExercise: ${addedExercises}">
+        <td th:text="${workoutExercise.exercise.name}"></td>
+        <td th:text="${workoutExercise.sets}"></td>
+        <td th:text="${workoutExercise.reps}"></td>
+        <td th:text="${workoutExercise.weight}"></td>
+        <td>
+            <form th:action="@{/workout-exercise/delete}" method="post">
+                <input type="hidden" name="id" th:value="${workoutExercise.id}"/>
+                <input type="hidden" name="workoutId" th:value="${workoutId}"/>
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
+
