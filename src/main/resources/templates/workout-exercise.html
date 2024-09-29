@@ -10,7 +10,7 @@
 
 
 <form th:action="@{/workout-exercise(workoutId=${workoutId})}" method="post">
-    <input type="hidden" name="workoutId" th:value="${workoutId}" />
+    <input type="hidden" name="workoutId" th:value="${workoutId}"/>
 
 
     <label for="exercise">Exercise:</label>
@@ -27,10 +27,31 @@
     <input type="number" name="reps" id="reps" min="1" th:value="${workoutExercise.reps}" required/><br/><br/>
 
     <label for="weight">Weight (kg):</label>
-    <input type="number" name="weight" id="weight" step="0.1" min="0" th:value="${workoutExercise.weight}" required/><br/><br/>
+    <input type="number" name="weight" id="weight" step="0.1" min="0" th:value="${workoutExercise.weight}"
+           required/><br/><br/>
 
     <button type="submit">Add Exercise</button>
 </form>
+
+<h2>Added Exercises</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Exercise</th>
+        <th>Sets</th>
+        <th>Reps</th>
+        <th>Weight (kg)</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="workoutExercise: ${addedExercises}">
+        <td th:text="${workoutExercise.exercise.name}"></td>
+        <td th:text="${workoutExercise.sets}"></td>
+        <td th:text="${workoutExercise.reps}"></td>
+        <td th:text="${workoutExercise.weight}"></td>
+    </tr>
+    </tbody>
+</table>
 
 </body>
 </html>

@@ -31,6 +31,9 @@ public class WorkoutExerciseController {
         model.addAttribute("exercises", exercises);
         model.addAttribute("workoutExercise", new WorkoutExercise());
         model.addAttribute("workoutId", workoutId);
+
+        List<WorkoutExercise> addedExercises = workoutExerciseService.findByWorkoutId(workoutId);
+        model.addAttribute("addedExercises", addedExercises);
         return "workout-exercise";
     }
 
