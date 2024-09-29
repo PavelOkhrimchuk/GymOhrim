@@ -29,5 +29,11 @@ public class WorkoutService {
         }
     }
 
+    public Workout findById(Integer id) {
+        return workoutRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Workout with id " + id + " not found"));
+    }
+
+
 
 }
