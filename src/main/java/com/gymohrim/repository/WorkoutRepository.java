@@ -11,4 +11,6 @@ import java.util.Optional;
 @Repository
 public interface WorkoutRepository extends JpaRepository<Workout,Integer> {
     Optional<Workout> findByDailyRecord(DailyRecord dailyRecord);
+
+
 }
