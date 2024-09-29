@@ -7,6 +7,7 @@ import com.gymohrim.repository.WorkoutRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,7 +22,7 @@ public class WorkoutExerciseService {
 
     public void saveOrUpdateWorkoutExercise(WorkoutExercise workoutExercise) {
 
-        Optional<WorkoutExercise> existingWorkoutExercise = workoutExerciseRepository.findByWorkout(workoutExercise.getWorkout());
+        Optional<WorkoutExercise> existingWorkoutExercise = workoutExerciseRepository.findByWorkoutAndExercise(workoutExercise.getWorkout(), workoutExercise.getExercise());
 
         if (existingWorkoutExercise.isPresent()) {
             WorkoutExercise existing = existingWorkoutExercise.get();
@@ -32,10 +33,15 @@ public class WorkoutExerciseService {
             existing.setWeight(workoutExercise.getWeight());
             workoutExerciseRepository.save(existing);
         } else {
+
             workoutExerciseRepository.save(workoutExercise);
         }
 
 
+    }
+
+    public List<WorkoutExercise> findByWorkoutId(Integer id) {
+        return workoutExerciseRepository.findByWorkoutId(id);
     }
 
 
