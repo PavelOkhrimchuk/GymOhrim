@@ -45,4 +45,10 @@ public class WorkoutExerciseController {
         return "redirect:/workout-exercise?workoutId=" + workout.getId();
 
     }
+
+    @PostMapping("/delete")
+    public String deleteWorkoutExercise(@RequestParam("workoutId") Integer workoutId, @RequestParam("id") Integer id) {
+        workoutExerciseService.deleteWorkoutExercise(id);
+        return "redirect:/workout-exercise?workoutId=" + workoutId;
+    }
 }

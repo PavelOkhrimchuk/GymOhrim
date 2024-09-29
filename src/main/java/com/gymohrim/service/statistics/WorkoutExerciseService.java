@@ -44,5 +44,9 @@ public class WorkoutExerciseService {
         return workoutExerciseRepository.findByWorkoutId(id);
     }
 
+    public void deleteWorkoutExercise(Integer id) {
+        workoutExerciseRepository.deleteById(id);
+    }
+
 
 }

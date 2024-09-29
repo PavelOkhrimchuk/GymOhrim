@@ -41,6 +41,7 @@
         <th>Sets</th>
         <th>Reps</th>
         <th>Weight (kg)</th>
+        <th>Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -49,6 +50,13 @@
         <td th:text="${workoutExercise.sets}"></td>
         <td th:text="${workoutExercise.reps}"></td>
         <td th:text="${workoutExercise.weight}"></td>
+        <td>
+            <form th:action="@{/workout-exercise/delete}" method="post">
+                <input type="hidden" name="id" th:value="${workoutExercise.id}"/>
+                <input type="hidden" name="workoutId" th:value="${workoutId}"/>
+                <button type="submit">Delete</button>
+            </form>
+        </td>
     </tr>
     </tbody>
 </table>
