@@ -1,10 +1,10 @@
 package com.gymohrim.controller;
 
 
-import com.gymohrim.entity.DailyRecord;
-import com.gymohrim.entity.Nutrition;
-import com.gymohrim.entity.User;
-import com.gymohrim.entity.Workout;
+import com.gymohrim.dto.openfoodfacts.api.ProductDetails;
+import com.gymohrim.entity.*;
+import com.gymohrim.repository.ProductRepository;
+import com.gymohrim.service.api.OpenFoodFactsService;
 import com.gymohrim.service.statistics.DailyRecordService;
 import com.gymohrim.service.statistics.NutritionService;
 import com.gymohrim.service.statistics.WorkoutService;
@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -30,6 +32,8 @@ public class DailyRecordController {
     private final DailyRecordService dailyRecordService;
     private final WorkoutService workoutService;
     private final NutritionService nutritionService;
+    private final OpenFoodFactsService openFoodFactsService;
+    private final ProductRepository productRepository;
 
     @GetMapping
     public String showDailyRecord(@RequestParam("selectedDate") String selectedDate,
@@ -53,11 +57,14 @@ public class DailyRecordController {
 
             Workout workout = dailyRecord.getWorkout();
             model.addAttribute("workout", workout != null ? workout : new Workout());
-            Nutrition nutrition = dailyRecord.getNutrition();
-            model.addAttribute("nutrition", nutrition != null ? nutrition : new Nutrition());
+            List<Nutrition> nutritionList = dailyRecord.getNutritionList();
+            model.addAttribute("nutritionList", nutritionList != null ? nutritionList : new ArrayList<>());
         } else {
             model.addAttribute("error", "No record found for the selected date.");
         }
+
+        List<Product> products = nutritionService.getAllProducts();
+        model.addAttribute("products", products);
 
         return "daily-record";
     }
@@ -72,12 +79,20 @@ public class DailyRecordController {
     }
 
     @PostMapping("/save-nutrition")
-    public String saveNutrition(@ModelAttribute Nutrition nutrition, @RequestParam("dailyRecordId") Integer dailyRecordId) {
+    public String saveNutrition(@RequestParam("barcode") String barcode,
+                                @RequestParam("dailyRecordId") Integer dailyRecordId) {
+
         DailyRecord dailyRecord = dailyRecordService.findById(dailyRecordId);
-        nutrition.setDailyRecord(dailyRecord);
-        nutritionService.saveOrUpdateNutrition(nutrition);
+        ProductDetails productDetails = openFoodFactsService.getProductInfo(barcode);
+
+        if (productDetails != null) {
+            nutritionService.addNutrition(dailyRecord, barcode, productDetails);
+        }
+
         return "redirect:/daily-record?selectedDate=" + dailyRecord.getDate();
     }
+
+
 
 
 
