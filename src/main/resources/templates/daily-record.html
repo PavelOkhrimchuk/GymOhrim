@@ -47,6 +47,9 @@
                 th:text="${product.name}">Product Name</option>
     </select>
 
+    <label for="grams">Enter Grams</label>
+    <input type="number" name="grams" id="grams" required min="1">
+
     <button type="submit">Add Nutrition</button>
 </form>
 
@@ -71,6 +74,12 @@
     </tr>
     </tbody>
 </table>
+
+<h3>Total Nutrition Summary</h3>
+<p>Calories: <span th:text="${totalCalories}"></span></p>
+<p>Protein: <span th:text="${totalProtein}"></span> g</p>
+<p>Fat: <span th:text="${totalFat}"></span> g</p>
+<p>Carbohydrates: <span th:text="${totalCarbohydrates}"></span> g</p>
 
 
 </body>
