@@ -3,6 +3,8 @@ package com.gymohrim.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Builder
 @AllArgsConstructor
@@ -17,8 +19,10 @@ public class Product {
     private Integer id;
 
     private String name;
-    private String barcode; 
+    private String barcode;
 
-    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
-    private Nutrition nutrition;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Nutrition> nutritionList;
+
 }

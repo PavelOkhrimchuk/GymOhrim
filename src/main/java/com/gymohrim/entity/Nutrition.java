@@ -19,13 +19,18 @@ public class Nutrition {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "daily_record_id", nullable = false)
     private DailyRecord dailyRecord;
+
 
     private Integer calories;
     private Double protein;
     private Double fat;
     private Double carbohydrates;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
 }

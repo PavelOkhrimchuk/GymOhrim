@@ -3,7 +3,9 @@ package com.gymohrim.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Builder
@@ -28,8 +30,8 @@ public class DailyRecord {
     @OneToOne(mappedBy = "dailyRecord", cascade = CascadeType.ALL, orphanRemoval = true)
     private Workout workout;
 
-    @OneToOne(mappedBy = "dailyRecord", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Nutrition nutrition;
+    @OneToMany(mappedBy = "dailyRecord", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Nutrition> nutritionList = new ArrayList<>();
 
 
 }
