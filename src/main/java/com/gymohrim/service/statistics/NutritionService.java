@@ -20,15 +20,16 @@ public class NutritionService {
 
     private final ProductRepository productRepository;
 
-    public void addNutrition(DailyRecord dailyRecord, String barcode, ProductDetails productDetails) {
+    public void addNutrition(DailyRecord dailyRecord, String barcode, ProductDetails productDetails, Double grams) {
         Product product = productRepository.findByBarcode(barcode);
 
         Nutrition nutrition = new Nutrition();
         nutrition.setDailyRecord(dailyRecord);
-        nutrition.setCalories((int) productDetails.getNutriments().getEnergyKcal());
-        nutrition.setProtein(productDetails.getNutriments().getProteins());
-        nutrition.setFat(productDetails.getNutriments().getFat());
-        nutrition.setCarbohydrates(productDetails.getNutriments().getCarbohydrates());
+
+        nutrition.setCalories((int) ((productDetails.getNutriments().getEnergyKcal() / 100) * grams));
+        nutrition.setProtein((productDetails.getNutriments().getProteins() / 100) * grams);
+        nutrition.setFat((productDetails.getNutriments().getFat() / 100) * grams);
+        nutrition.setCarbohydrates((productDetails.getNutriments().getCarbohydrates() / 100) * grams);
         nutrition.setProduct(product);
 
         dailyRecord.getNutritionList().add(nutrition);
