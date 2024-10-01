@@ -81,28 +81,17 @@ public class DailyRecordController {
     @PostMapping("/save-nutrition")
     public String saveNutrition(@RequestParam("barcode") String barcode,
                                 @RequestParam("dailyRecordId") Integer dailyRecordId) {
+
         DailyRecord dailyRecord = dailyRecordService.findById(dailyRecordId);
         ProductDetails productDetails = openFoodFactsService.getProductInfo(barcode);
 
         if (productDetails != null) {
-            Nutrition nutrition = new Nutrition();
-            nutrition.setDailyRecord(dailyRecord);
-            nutrition.setCalories((int) productDetails.getNutriments().getEnergyKcal());
-            nutrition.setProtein(productDetails.getNutriments().getProteins());
-            nutrition.setFat(productDetails.getNutriments().getFat());
-            nutrition.setCarbohydrates(productDetails.getNutriments().getCarbohydrates());
-
-            Product product = productRepository.findByBarcode(barcode);
-            nutrition.setProduct(product);
-
-
-            dailyRecord.getNutritionList().add(nutrition);
-
-            nutritionService.saveOrUpdateNutrition(nutrition);
+            nutritionService.addNutrition(dailyRecord, barcode, productDetails);
         }
 
         return "redirect:/daily-record?selectedDate=" + dailyRecord.getDate();
     }
+
 
 
 
