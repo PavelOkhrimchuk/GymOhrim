@@ -59,6 +59,17 @@ public class DailyRecordController {
             model.addAttribute("workout", workout != null ? workout : new Workout());
             List<Nutrition> nutritionList = dailyRecord.getNutritionList();
             model.addAttribute("nutritionList", nutritionList != null ? nutritionList : new ArrayList<>());
+
+
+            int totalCalories = nutritionList.stream().mapToInt(Nutrition::getCalories).sum();
+            double totalProtein = nutritionList.stream().mapToDouble(Nutrition::getProtein).sum();
+            double totalFat = nutritionList.stream().mapToDouble(Nutrition::getFat).sum();
+            double totalCarbohydrates = nutritionList.stream().mapToDouble(Nutrition::getCarbohydrates).sum();
+
+            model.addAttribute("totalCalories", totalCalories);
+            model.addAttribute("totalProtein", totalProtein);
+            model.addAttribute("totalFat", totalFat);
+            model.addAttribute("totalCarbohydrates", totalCarbohydrates);
         } else {
             model.addAttribute("error", "No record found for the selected date.");
         }
@@ -80,13 +91,14 @@ public class DailyRecordController {
 
     @PostMapping("/save-nutrition")
     public String saveNutrition(@RequestParam("barcode") String barcode,
-                                @RequestParam("dailyRecordId") Integer dailyRecordId) {
+                                @RequestParam("dailyRecordId") Integer dailyRecordId,
+                                @RequestParam("grams") Double grams) {
 
         DailyRecord dailyRecord = dailyRecordService.findById(dailyRecordId);
         ProductDetails productDetails = openFoodFactsService.getProductInfo(barcode);
 
         if (productDetails != null) {
-            nutritionService.addNutrition(dailyRecord, barcode, productDetails);
+            nutritionService.addNutrition(dailyRecord, barcode, productDetails, grams);
         }
 
         return "redirect:/daily-record?selectedDate=" + dailyRecord.getDate();
