@@ -104,6 +104,25 @@ public class DailyRecordController {
         return "redirect:/daily-record?selectedDate=" + dailyRecord.getDate();
     }
 
+    @GetMapping("/search-product")
+    public String searchProduct(@RequestParam("query") String query,
+                                @RequestParam("dailyRecordId") Integer dailyRecordId,
+                                Model model,
+                                @AuthenticationPrincipal UserDetails userDetails) {
+        User user = userProfileService.findByEmail(userDetails.getUsername());
+
+        List<Product> foundProducts = productRepository.findByFullTextSearch(query);
+
+        model.addAttribute("foundProducts", foundProducts);
+        model.addAttribute("query", query);
+        model.addAttribute("dailyRecordId", dailyRecordId);
+
+
+        model.addAttribute("products", nutritionService.getAllProducts());
+
+        return "product-search-result";
+    }
+
 
 
 
