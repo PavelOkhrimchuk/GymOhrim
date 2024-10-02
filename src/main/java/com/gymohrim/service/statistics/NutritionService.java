@@ -7,6 +7,7 @@ import com.gymohrim.entity.Nutrition;
 import com.gymohrim.entity.Product;
 import com.gymohrim.repository.NutritionRepository;
 import com.gymohrim.repository.ProductRepository;
+import com.gymohrim.util.RoundingUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,9 +28,9 @@ public class NutritionService {
         nutrition.setDailyRecord(dailyRecord);
 
         nutrition.setCalories((int) ((productDetails.getNutriments().getEnergyKcal() / 100) * grams));
-        nutrition.setProtein((productDetails.getNutriments().getProteins() / 100) * grams);
-        nutrition.setFat((productDetails.getNutriments().getFat() / 100) * grams);
-        nutrition.setCarbohydrates((productDetails.getNutriments().getCarbohydrates() / 100) * grams);
+        nutrition.setProtein(RoundingUtil.roundToOneDecimal(productDetails.getNutriments().getProteins() / 100 * grams));
+        nutrition.setFat(RoundingUtil.roundToOneDecimal(productDetails.getNutriments().getFat() / 100 * grams));
+        nutrition.setCarbohydrates(RoundingUtil.roundToOneDecimal(productDetails.getNutriments().getCarbohydrates() / 100 * grams));
         nutrition.setProduct(product);
 
         dailyRecord.getNutritionList().add(nutrition);
