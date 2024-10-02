@@ -35,23 +35,14 @@
     <button type="submit">Add Exercises</button>
 </form>
 
-<h2>Nutrition</h2>
-<form th:action="@{/daily-record/save-nutrition}" method="post">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+<form th:action="@{/daily-record/search-product}" method="get">
+    <label for="productSearch">Search Product:</label>
+    <input type="text" name="query" id="productSearch" placeholder="Enter product name" required />
     <input type="hidden" name="dailyRecordId" th:value="${dailyRecord.id}" />
-
-    <label for="productSelect">Select Product:</label>
-    <select name="barcode" id="productSelect" required>
-        <option th:each="product : ${products}"
-                th:value="${product.barcode}"
-                th:text="${product.name}">Product Name</option>
-    </select>
-
-    <label for="grams">Enter Grams</label>
-    <input type="number" name="grams" id="grams" required min="1">
-
-    <button type="submit">Add Nutrition</button>
+    <button type="submit">Search</button>
 </form>
+
+
 
 <h3>Nutrition Records</h3>
 <table>
