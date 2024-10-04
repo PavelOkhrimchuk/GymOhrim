@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Nutriments {
+public class NutrimentsDto {
 
     @JsonProperty("proteins")
     private double proteins;

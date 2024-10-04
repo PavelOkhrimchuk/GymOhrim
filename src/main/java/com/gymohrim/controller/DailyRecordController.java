@@ -1,7 +1,7 @@
 package com.gymohrim.controller;
 
 
-import com.gymohrim.dto.openfoodfacts.api.ProductDetails;
+import com.gymohrim.dto.openfoodfacts.api.ProductDetailsDto;
 import com.gymohrim.entity.*;
 import com.gymohrim.repository.ProductRepository;
 import com.gymohrim.service.api.OpenFoodFactsService;
@@ -95,10 +95,10 @@ public class DailyRecordController {
                                 @RequestParam("grams") Double grams) {
 
         DailyRecord dailyRecord = dailyRecordService.findById(dailyRecordId);
-        ProductDetails productDetails = openFoodFactsService.getProductInfo(barcode);
+        ProductDetailsDto productDetailsDto = openFoodFactsService.getProductInfo(barcode);
 
-        if (productDetails != null) {
-            nutritionService.addNutrition(dailyRecord, barcode, productDetails, grams);
+        if (productDetailsDto != null) {
+            nutritionService.addNutrition(dailyRecord, barcode, productDetailsDto, grams);
         }
 
         return "redirect:/daily-record?selectedDate=" + dailyRecord.getDate();

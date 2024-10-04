@@ -1,7 +1,7 @@
 package com.gymohrim.service.statistics;
 
 
-import com.gymohrim.dto.openfoodfacts.api.ProductDetails;
+import com.gymohrim.dto.openfoodfacts.api.ProductDetailsDto;
 import com.gymohrim.entity.DailyRecord;
 import com.gymohrim.entity.Nutrition;
 import com.gymohrim.entity.Product;
@@ -21,16 +21,16 @@ public class NutritionService {
 
     private final ProductRepository productRepository;
 
-    public void addNutrition(DailyRecord dailyRecord, String barcode, ProductDetails productDetails, Double grams) {
+    public void addNutrition(DailyRecord dailyRecord, String barcode, ProductDetailsDto productDetailsDto, Double grams) {
         Product product = productRepository.findByBarcode(barcode);
 
         Nutrition nutrition = new Nutrition();
         nutrition.setDailyRecord(dailyRecord);
 
-        nutrition.setCalories((int) ((productDetails.getNutriments().getEnergyKcal() / 100) * grams));
-        nutrition.setProtein(RoundingUtil.roundToOneDecimal(productDetails.getNutriments().getProteins() / 100 * grams));
-        nutrition.setFat(RoundingUtil.roundToOneDecimal(productDetails.getNutriments().getFat() / 100 * grams));
-        nutrition.setCarbohydrates(RoundingUtil.roundToOneDecimal(productDetails.getNutriments().getCarbohydrates() / 100 * grams));
+        nutrition.setCalories((int) ((productDetailsDto.getNutrimentsDto().getEnergyKcal() / 100) * grams));
+        nutrition.setProtein(RoundingUtil.roundToOneDecimal(productDetailsDto.getNutrimentsDto().getProteins() / 100 * grams));
+        nutrition.setFat(RoundingUtil.roundToOneDecimal(productDetailsDto.getNutrimentsDto().getFat() / 100 * grams));
+        nutrition.setCarbohydrates(RoundingUtil.roundToOneDecimal(productDetailsDto.getNutrimentsDto().getCarbohydrates() / 100 * grams));
         nutrition.setProduct(product);
 
         dailyRecord.getNutritionList().add(nutrition);
