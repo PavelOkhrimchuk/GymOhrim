@@ -59,13 +59,10 @@ public class DailyRecordController {
             model.addAttribute("workout", workout != null ? workout : new Workout());
             List<Nutrition> nutritionList = dailyRecord.getNutritionList();
             model.addAttribute("nutritionList", nutritionList != null ? nutritionList : new ArrayList<>());
-
-
             int totalCalories = nutritionList.stream().mapToInt(Nutrition::getCalories).sum();
             double totalProtein = nutritionList.stream().mapToDouble(Nutrition::getProtein).sum();
             double totalFat = nutritionList.stream().mapToDouble(Nutrition::getFat).sum();
             double totalCarbohydrates = nutritionList.stream().mapToDouble(Nutrition::getCarbohydrates).sum();
-
             model.addAttribute("totalCalories", totalCalories);
             model.addAttribute("totalProtein", totalProtein);
             model.addAttribute("totalFat", totalFat);
@@ -80,7 +77,6 @@ public class DailyRecordController {
         return "daily-record";
     }
 
-
     @PostMapping("/save-workout")
     public String saveWorkout(@ModelAttribute Workout workout, @RequestParam("dailyRecordId") Integer dailyRecordId) {
         DailyRecord dailyRecord = dailyRecordService.findById(dailyRecordId);
@@ -89,45 +85,32 @@ public class DailyRecordController {
         return "redirect:/daily-record?selectedDate=" + dailyRecord.getDate();
     }
 
+
     @PostMapping("/save-nutrition")
-    public String saveNutrition(@RequestParam("barcode") String barcode,
-                                @RequestParam("dailyRecordId") Integer dailyRecordId,
+    public String saveNutrition(@RequestParam("barcode") String barcode, @RequestParam("dailyRecordId") Integer dailyRecordId,
                                 @RequestParam("grams") Double grams) {
 
         DailyRecord dailyRecord = dailyRecordService.findById(dailyRecordId);
-        ProductDetailsDto productDetailsDto = openFoodFactsService.getProductInfo(barcode);
+        ProductDetailsDto productDetails = openFoodFactsService.getProductInfo(barcode);
 
-        if (productDetailsDto != null) {
-            nutritionService.addNutrition(dailyRecord, barcode, productDetailsDto, grams);
+        if (productDetails != null) {
+            nutritionService.addNutrition(dailyRecord, barcode, productDetails, grams);
         }
 
         return "redirect:/daily-record?selectedDate=" + dailyRecord.getDate();
     }
-
-    @GetMapping("/search-product")
-    public String searchProduct(@RequestParam("query") String query,
-                                @RequestParam("dailyRecordId") Integer dailyRecordId,
-                                Model model,
-                                @AuthenticationPrincipal UserDetails userDetails) {
-        User user = userProfileService.findByEmail(userDetails.getUsername());
-
-        List<Product> foundProducts = productRepository.findByFullTextSearch(query);
-
-        model.addAttribute("foundProducts", foundProducts);
-        model.addAttribute("query", query);
-        model.addAttribute("dailyRecordId", dailyRecordId);
-
-
-        model.addAttribute("products", nutritionService.getAllProducts());
-
-        return "product-search-result";
-    }
-
-
-
-
-
-
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
