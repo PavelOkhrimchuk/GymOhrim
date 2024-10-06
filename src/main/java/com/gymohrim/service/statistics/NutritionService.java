@@ -39,6 +39,14 @@ public class NutritionService {
         nutritionRepository.save(nutrition);
     }
 
+    public List<Product> searchProducts(String query) {
+        if (query == null || query.isEmpty()) {
+            return List.of();
+        }
+
+        return productRepository.findByFullTextSearch(query);
+    }
+
 
 
 

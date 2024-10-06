@@ -3,7 +3,6 @@ package com.gymohrim.controller;
 
 import com.gymohrim.dto.openfoodfacts.api.ProductDetailsDto;
 import com.gymohrim.entity.*;
-import com.gymohrim.repository.ProductRepository;
 import com.gymohrim.service.api.OpenFoodFactsService;
 import com.gymohrim.service.statistics.DailyRecordService;
 import com.gymohrim.service.statistics.NutritionService;
@@ -33,7 +32,7 @@ public class DailyRecordController {
     private final WorkoutService workoutService;
     private final NutritionService nutritionService;
     private final OpenFoodFactsService openFoodFactsService;
-    private final ProductRepository productRepository;
+
 
     @GetMapping
     public String showDailyRecord(@RequestParam("selectedDate") String selectedDate,
@@ -103,7 +102,7 @@ public class DailyRecordController {
                 }
             }
         } else if (productName != null && !productName.isEmpty()) {
-            List<Product> foundProducts = productRepository.findByFullTextSearch(productName);
+            List<Product> foundProducts = nutritionService.searchProducts(productName);
             if (!foundProducts.isEmpty()) {
                 model.addAttribute("foundProducts", foundProducts);
                 model.addAttribute("dailyRecord", dailyRecord);
@@ -121,7 +120,7 @@ public class DailyRecordController {
     @GetMapping("/search-products")
     @ResponseBody
     public List<Product> searchProducts(@RequestParam("query") String query) {
-        return productRepository.findByFullTextSearch(query);
+        return nutritionService.searchProducts(query);
     }
 
 
