@@ -116,12 +116,20 @@ public class DailyRecordController {
 
 
 
-
     @GetMapping("/search-products")
     @ResponseBody
     public List<Product> searchProducts(@RequestParam("query") String query) {
         return nutritionService.searchProducts(query);
     }
+
+    @PostMapping("/delete-nutrition")
+    public String deleteNutrition(@RequestParam("nutritionId") Integer nutritionId,
+                                  @RequestParam("dailyRecordId") Integer dailyRecordId) {
+        nutritionService.deleteNutrition(nutritionId); // Удаляем запись о питании
+        return "redirect:/daily-record?selectedDate=" + dailyRecordService.findById(dailyRecordId).getDate();
+    }
+
+
 
 
 
