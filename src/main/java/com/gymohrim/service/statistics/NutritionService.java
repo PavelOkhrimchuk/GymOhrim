@@ -47,10 +47,18 @@ public class NutritionService {
         return productRepository.findByFullTextSearch(query);
     }
 
+    public void deleteNutrition(Integer id) {
+        nutritionRepository.deleteById(id);
+    }
+
+
+
 
 
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
+
+
 }
