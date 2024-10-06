@@ -1,4 +1,4 @@
-package com.gymohrim.controller;
+package com.gymohrim.controller.workout;
 
 
 import com.gymohrim.entity.Exercise;

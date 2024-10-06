@@ -1,9 +1,8 @@
 package com.gymohrim.controller;
 
 
-import com.gymohrim.dto.openfoodfacts.api.ProductDetails;
+import com.gymohrim.dto.openfoodfacts.api.ProductDetailsDto;
 import com.gymohrim.entity.*;
-import com.gymohrim.repository.ProductRepository;
 import com.gymohrim.service.api.OpenFoodFactsService;
 import com.gymohrim.service.statistics.DailyRecordService;
 import com.gymohrim.service.statistics.NutritionService;
@@ -33,7 +32,7 @@ public class DailyRecordController {
     private final WorkoutService workoutService;
     private final NutritionService nutritionService;
     private final OpenFoodFactsService openFoodFactsService;
-    private final ProductRepository productRepository;
+
 
     @GetMapping
     public String showDailyRecord(@RequestParam("selectedDate") String selectedDate,
@@ -58,7 +57,16 @@ public class DailyRecordController {
             Workout workout = dailyRecord.getWorkout();
             model.addAttribute("workout", workout != null ? workout : new Workout());
             List<Nutrition> nutritionList = dailyRecord.getNutritionList();
+
             model.addAttribute("nutritionList", nutritionList != null ? nutritionList : new ArrayList<>());
+            int totalCalories = nutritionList.stream().mapToInt(Nutrition::getCalories).sum();
+            double totalProtein = nutritionList.stream().mapToDouble(Nutrition::getProtein).sum();
+            double totalFat = nutritionList.stream().mapToDouble(Nutrition::getFat).sum();
+            double totalCarbohydrates = nutritionList.stream().mapToDouble(Nutrition::getCarbohydrates).sum();
+            model.addAttribute("totalCalories", totalCalories);
+            model.addAttribute("totalProtein", totalProtein);
+            model.addAttribute("totalFat", totalFat);
+            model.addAttribute("totalCarbohydrates", totalCarbohydrates);
         } else {
             model.addAttribute("error", "No record found for the selected date.");
         }
@@ -69,7 +77,6 @@ public class DailyRecordController {
         return "daily-record";
     }
 
-
     @PostMapping("/save-workout")
     public String saveWorkout(@ModelAttribute Workout workout, @RequestParam("dailyRecordId") Integer dailyRecordId) {
         DailyRecord dailyRecord = dailyRecordService.findById(dailyRecordId);
@@ -78,18 +85,48 @@ public class DailyRecordController {
         return "redirect:/daily-record?selectedDate=" + dailyRecord.getDate();
     }
 
+
     @PostMapping("/save-nutrition")
-    public String saveNutrition(@RequestParam("barcode") String barcode,
-                                @RequestParam("dailyRecordId") Integer dailyRecordId) {
-
+    public String saveNutrition(@RequestParam(value = "productSearch", required = false) String productName,
+                                @RequestParam("barcode") String barcode,
+                                @RequestParam("dailyRecordId") Integer dailyRecordId,
+                                @RequestParam(value = "grams", required = false) Double grams,
+                                Model model) {
         DailyRecord dailyRecord = dailyRecordService.findById(dailyRecordId);
-        ProductDetails productDetails = openFoodFactsService.getProductInfo(barcode);
 
-        if (productDetails != null) {
-            nutritionService.addNutrition(dailyRecord, barcode, productDetails);
+        if (barcode != null && !barcode.isEmpty()) {
+            ProductDetailsDto productDetails = openFoodFactsService.getProductInfo(barcode);
+            if (productDetails != null) {
+                if (grams != null) {
+                    nutritionService.addNutrition(dailyRecord, barcode, productDetails, grams);
+                }
+            }
+        } else if (productName != null && !productName.isEmpty()) {
+            List<Product> foundProducts = nutritionService.searchProducts(productName);
+            if (!foundProducts.isEmpty()) {
+                model.addAttribute("foundProducts", foundProducts);
+                model.addAttribute("dailyRecord", dailyRecord);
+                return "product-selection";
+            }
         }
 
         return "redirect:/daily-record?selectedDate=" + dailyRecord.getDate();
+    }
+
+
+
+
+    @GetMapping("/search-products")
+    @ResponseBody
+    public List<Product> searchProducts(@RequestParam("query") String query) {
+        return nutritionService.searchProducts(query);
+    }
+
+    @PostMapping("/delete-nutrition")
+    public String deleteNutrition(@RequestParam("nutritionId") Integer nutritionId,
+                                  @RequestParam("dailyRecordId") Integer dailyRecordId) {
+        nutritionService.deleteNutrition(nutritionId); // Удаляем запись о питании
+        return "redirect:/daily-record?selectedDate=" + dailyRecordService.findById(dailyRecordId).getDate();
     }
 
 
@@ -99,4 +136,17 @@ public class DailyRecordController {
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 

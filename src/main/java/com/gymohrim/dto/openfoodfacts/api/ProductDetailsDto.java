@@ -8,8 +8,8 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
-public class ProductDetails {
+public class ProductDetailsDto {
 
     @JsonProperty("nutriments")
-    private Nutriments nutriments;
+    private NutrimentsDto nutrimentsDto;
 }

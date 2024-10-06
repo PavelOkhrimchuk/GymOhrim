@@ -1,4 +1,4 @@
-package com.gymohrim.controller;
+package com.gymohrim.controller.authentication;
 
 import com.gymohrim.entity.User;
 import com.gymohrim.repository.UserRepository;

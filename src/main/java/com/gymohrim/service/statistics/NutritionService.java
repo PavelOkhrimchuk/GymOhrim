@@ -1,12 +1,13 @@
 package com.gymohrim.service.statistics;
 
 
-import com.gymohrim.dto.openfoodfacts.api.ProductDetails;
+import com.gymohrim.dto.openfoodfacts.api.ProductDetailsDto;
 import com.gymohrim.entity.DailyRecord;
 import com.gymohrim.entity.Nutrition;
 import com.gymohrim.entity.Product;
 import com.gymohrim.repository.NutritionRepository;
 import com.gymohrim.repository.ProductRepository;
+import com.gymohrim.util.RoundingUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,15 +21,16 @@ public class NutritionService {
 
     private final ProductRepository productRepository;
 
-    public void addNutrition(DailyRecord dailyRecord, String barcode, ProductDetails productDetails) {
+    public void addNutrition(DailyRecord dailyRecord, String barcode, ProductDetailsDto productDetailsDto, Double grams) {
         Product product = productRepository.findByBarcode(barcode);
 
         Nutrition nutrition = new Nutrition();
         nutrition.setDailyRecord(dailyRecord);
-        nutrition.setCalories((int) productDetails.getNutriments().getEnergyKcal());
-        nutrition.setProtein(productDetails.getNutriments().getProteins());
-        nutrition.setFat(productDetails.getNutriments().getFat());
-        nutrition.setCarbohydrates(productDetails.getNutriments().getCarbohydrates());
+
+        nutrition.setCalories((int) ((productDetailsDto.getNutrimentsDto().getEnergyKcal() / 100) * grams));
+        nutrition.setProtein(RoundingUtil.roundToOneDecimal(productDetailsDto.getNutrimentsDto().getProteins() / 100 * grams));
+        nutrition.setFat(RoundingUtil.roundToOneDecimal(productDetailsDto.getNutrimentsDto().getFat() / 100 * grams));
+        nutrition.setCarbohydrates(RoundingUtil.roundToOneDecimal(productDetailsDto.getNutrimentsDto().getCarbohydrates() / 100 * grams));
         nutrition.setProduct(product);
 
         dailyRecord.getNutritionList().add(nutrition);
@@ -37,10 +39,26 @@ public class NutritionService {
         nutritionRepository.save(nutrition);
     }
 
+    public List<Product> searchProducts(String query) {
+        if (query == null || query.isEmpty()) {
+            return List.of();
+        }
+
+        return productRepository.findByFullTextSearch(query);
+    }
+
+    public void deleteNutrition(Integer id) {
+        nutritionRepository.deleteById(id);
+    }
+
+
+
 
 
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
+
+
 }

@@ -40,15 +40,41 @@
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
     <input type="hidden" name="dailyRecordId" th:value="${dailyRecord.id}" />
 
-    <label for="productSelect">Select Product:</label>
-    <select name="barcode" id="productSelect" required>
-        <option th:each="product : ${products}"
-                th:value="${product.barcode}"
-                th:text="${product.name}">Product Name</option>
-    </select>
+    <label for="productSearch">Search Product:</label>
+    <input type="text" id="productSearch" name="productSearch" placeholder="Enter product name" autocomplete="off" required>
 
-    <button type="submit">Add Nutrition</button>
+
+    <input type="hidden" name="barcode" id="barcode" />
+
+
+    <button type="submit">Search</button>
 </form>
+
+
+<script>
+    document.getElementById('productSearch').addEventListener('input', function() {
+        const query = this.value;
+        if (query.length > 2) {
+            fetch(`/daily-record/search-products?query=${query}`)
+                .then(response => response.json())
+                .then(products => {
+                    const resultsContainer = document.getElementById('productResults');
+                    resultsContainer.innerHTML = '';
+                    products.forEach(product => {
+                        const li = document.createElement('li');
+                        li.textContent = product.name;
+                        li.dataset.barcode = product.barcode;
+                        li.addEventListener('click', function() {
+                            document.getElementById('productSearch').value = this.textContent;
+                            document.getElementById('barcode').value = this.dataset.barcode;
+                            document.getElementById('productResults').innerHTML = '';
+                        });
+                        resultsContainer.appendChild(li);
+                    });
+                });
+        }
+    });
+</script>
 
 <h3>Nutrition Records</h3>
 <table>
@@ -68,10 +94,23 @@
         <td th:text="${nutrition.protein}"></td>
         <td th:text="${nutrition.fat}"></td>
         <td th:text="${nutrition.carbohydrates}"></td>
+        <td>
+            <form th:action="@{/daily-record/delete-nutrition}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <input type="hidden" name="nutritionId" th:value="${nutrition.id}"/>
+                <input type="hidden" name="dailyRecordId" th:value="${dailyRecord.id}"/>
+                <button type="submit">Удалить</button>
+            </form>
+        </td>
     </tr>
     </tbody>
 </table>
 
+<h3>Total Nutrition Summary</h3>
+<p>Calories: <span th:text="${totalCalories}"></span></p>
+<p>Protein: <span th:text="${totalProtein}"></span> g</p>
+<p>Fat: <span th:text="${totalFat}"></span> g</p>
+<p>Carbohydrates: <span th:text="${totalCarbohydrates}"></span> g</p>
 
 </body>
 </html>
