@@ -94,6 +94,14 @@
         <td th:text="${nutrition.protein}"></td>
         <td th:text="${nutrition.fat}"></td>
         <td th:text="${nutrition.carbohydrates}"></td>
+        <td>
+            <form th:action="@{/daily-record/delete-nutrition}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <input type="hidden" name="nutritionId" th:value="${nutrition.id}"/>
+                <input type="hidden" name="dailyRecordId" th:value="${dailyRecord.id}"/>
+                <button type="submit">Удалить</button>
+            </form>
+        </td>
     </tr>
     </tbody>
 </table>
