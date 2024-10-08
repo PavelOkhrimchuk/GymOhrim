@@ -152,6 +152,20 @@ public class DailyRecordController {
 
     }
 
+    @PostMapping("/update-grams")
+    public String updateNutritionGrams(@RequestParam("nutritionId") Integer nutritionId,
+                                       @RequestParam("grams") Double grams, Model model) {
+        try {
+            nutritionService.updateGramsAndRecalculateNutrition(nutritionId, grams);
+            Optional<Nutrition> nutritionOpt = nutritionService.findById(nutritionId);
+            nutritionOpt.ifPresent(nutrition -> model.addAttribute("nutritionDetails", nutrition));
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+        }
+
+        return "product-details";
+    }
+
 
 
 
