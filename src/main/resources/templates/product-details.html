@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+</head>
+<body>
+
+<h1>Product Details</h1>
+
+
+<div th:if="${nutritionDetails != null}">
+    <h2 th:text="${nutritionDetails.product.name}"></h2>
+    <p><strong>Calories:</strong> <span th:text="${nutritionDetails.calories}"></span></p>
+    <p><strong>Protein:</strong> <span th:text="${nutritionDetails.protein}"></span> g</p>
+    <p><strong>Fat:</strong> <span th:text="${nutritionDetails.fat}"></span> g</p>
+    <p><strong>Carbohydrates:</strong> <span th:text="${nutritionDetails.carbohydrates}"></span> g</p>
+
+
+    <form th:action="@{/daily-record/update-grams}" method="post">
+        <input type="hidden" name="nutritionId" th:value="${nutritionDetails.id}" />
+        <label for="grams">Grams:</label>
+        <input type="number" id="grams" name="grams" th:value="${nutritionDetails.grams}" step="0.1" min="0" />
+        <button type="submit">Update</button>
+    </form>
+</div>
+
+
+
+
+<div th:if="${error != null}">
+    <p th:text="${error}"></p>
+</div>
+
+
+
+
+</body>
+</html>
