@@ -9,9 +9,6 @@
 
 <h1>Daily Record for <span th:text="${dailyRecord.date}"></span></h1>
 
-<div th:if="${error != null}">
-    <p th:text="${error}"></p>
-</div>
 
 <h2>Workout</h2>
 <form th:action="@{/daily-record/save-workout}" method="post">
