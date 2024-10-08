@@ -103,11 +103,15 @@ public class DailyRecordController {
             }
         } else if (productName != null && !productName.isEmpty()) {
             List<Product> foundProducts = nutritionService.searchProducts(productName);
+            model.addAttribute("dailyRecord", dailyRecord);
             if (!foundProducts.isEmpty()) {
                 model.addAttribute("foundProducts", foundProducts);
-                model.addAttribute("dailyRecord", dailyRecord);
-                return "product-selection";
+
+            } else {
+                model.addAttribute("error", "No record found for the selected date.");
             }
+            return "product-selection";
+
         }
 
         return "redirect:/daily-record?selectedDate=" + dailyRecord.getDate();
