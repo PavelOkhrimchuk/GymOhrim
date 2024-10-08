@@ -82,11 +82,15 @@
         <th>Protein</th>
         <th>Fat</th>
         <th>Carbohydrates</th>
+        <th>Actions</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="nutrition : ${dailyRecord.nutritionList}">
-        <td th:text="${nutrition.product.name}"></td>
+        <td>
+
+            <a th:href="@{/daily-record/product-details(nutritionId=${nutrition.id})}" th:text="${nutrition.product.name}"></a>
+        </td>
         <td th:text="${nutrition.calories}"></td>
         <td th:text="${nutrition.protein}"></td>
         <td th:text="${nutrition.fat}"></td>
@@ -102,6 +106,7 @@
     </tr>
     </tbody>
 </table>
+
 
 <h3>Total Nutrition Summary</h3>
 <p>Calories: <span th:text="${totalCalories}"></span></p>
