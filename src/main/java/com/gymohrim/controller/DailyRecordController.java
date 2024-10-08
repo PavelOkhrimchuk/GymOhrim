@@ -134,6 +134,29 @@ public class DailyRecordController {
     }
 
 
+    @GetMapping ("/product-details")
+    public String showProductDetails(@RequestParam("nutritionId") Integer nutritionId, Model model) {
+
+        Optional<Nutrition> nutrition = nutritionService.findById(nutritionId);
+
+        if(nutrition.isPresent()) {
+            Nutrition nutritionDetails = nutrition.get();
+            model.addAttribute("nutritionDetails", nutritionDetails);
+
+        } else {
+            model.addAttribute("error", "Nutrition record not found.");
+        }
+
+        return "product-details";
+
+
+    }
+
+
+
+
+
+
 
 
 
