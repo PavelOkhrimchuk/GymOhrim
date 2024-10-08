@@ -11,7 +11,7 @@ import com.gymohrim.util.RoundingUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.List;import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +32,7 @@ public class NutritionService {
         nutrition.setFat(RoundingUtil.roundToOneDecimal(productDetailsDto.getNutrimentsDto().getFat() / 100 * grams));
         nutrition.setCarbohydrates(RoundingUtil.roundToOneDecimal(productDetailsDto.getNutrimentsDto().getCarbohydrates() / 100 * grams));
         nutrition.setProduct(product);
+        nutrition.setGrams(grams);
 
         dailyRecord.getNutritionList().add(nutrition);
 
@@ -51,6 +52,38 @@ public class NutritionService {
         nutritionRepository.deleteById(id);
     }
 
+    public Optional<Nutrition> findById(Integer id) {
+        return nutritionRepository.findById(id);
+    }
+
+
+
+
+
+    public void updateGramsAndRecalculateNutrition(Integer nutritionId, Double newGrams) {
+        Optional<Nutrition> nutritionOpt = findById(nutritionId);
+
+        if (nutritionOpt.isPresent()) {
+            Nutrition nutrition = nutritionOpt.get();
+            double originalGrams = nutrition.getGrams();
+
+            if (originalGrams > 0) {
+                double factor = newGrams / originalGrams;
+
+                nutrition.setCalories((int) (nutrition.getCalories() * factor));
+                nutrition.setProtein(RoundingUtil.roundToOneDecimal(nutrition.getProtein() * factor));
+                nutrition.setFat(RoundingUtil.roundToOneDecimal(nutrition.getFat() * factor));
+                nutrition.setCarbohydrates(RoundingUtil.roundToOneDecimal(nutrition.getCarbohydrates() * factor));
+                nutrition.setGrams(newGrams);
+
+                nutritionRepository.save(nutrition);
+            } else {
+                throw new IllegalArgumentException("Original grams cannot be zero or negative.");
+            }
+        } else {
+            throw new IllegalArgumentException("Nutrition record not found.");
+        }
+    }
 
 
 

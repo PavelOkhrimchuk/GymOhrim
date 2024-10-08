@@ -9,9 +9,6 @@
 
 <h1>Daily Record for <span th:text="${dailyRecord.date}"></span></h1>
 
-<div th:if="${error != null}">
-    <p th:text="${error}"></p>
-</div>
 
 <h2>Workout</h2>
 <form th:action="@{/daily-record/save-workout}" method="post">
@@ -85,11 +82,15 @@
         <th>Protein</th>
         <th>Fat</th>
         <th>Carbohydrates</th>
+        <th>Actions</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="nutrition : ${dailyRecord.nutritionList}">
-        <td th:text="${nutrition.product.name}"></td>
+        <td>
+
+            <a th:href="@{/daily-record/product-details(nutritionId=${nutrition.id})}" th:text="${nutrition.product.name}"></a>
+        </td>
         <td th:text="${nutrition.calories}"></td>
         <td th:text="${nutrition.protein}"></td>
         <td th:text="${nutrition.fat}"></td>
@@ -106,11 +107,15 @@
     </tbody>
 </table>
 
+
 <h3>Total Nutrition Summary</h3>
 <p>Calories: <span th:text="${totalCalories}"></span></p>
 <p>Protein: <span th:text="${totalProtein}"></span> g</p>
 <p>Fat: <span th:text="${totalFat}"></span> g</p>
 <p>Carbohydrates: <span th:text="${totalCarbohydrates}"></span> g</p>
 
+
+<a href="/profile">Go to Profile</a>
+<a href="/calendar">Go to Calendar</a>
 </body>
 </html>

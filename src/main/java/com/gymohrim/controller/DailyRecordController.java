@@ -103,11 +103,15 @@ public class DailyRecordController {
             }
         } else if (productName != null && !productName.isEmpty()) {
             List<Product> foundProducts = nutritionService.searchProducts(productName);
+            model.addAttribute("dailyRecord", dailyRecord);
             if (!foundProducts.isEmpty()) {
                 model.addAttribute("foundProducts", foundProducts);
-                model.addAttribute("dailyRecord", dailyRecord);
-                return "product-selection";
+
+            } else {
+                model.addAttribute("error", "No record found for the selected date.");
             }
+            return "product-selection";
+
         }
 
         return "redirect:/daily-record?selectedDate=" + dailyRecord.getDate();
@@ -128,6 +132,43 @@ public class DailyRecordController {
         nutritionService.deleteNutrition(nutritionId); // Удаляем запись о питании
         return "redirect:/daily-record?selectedDate=" + dailyRecordService.findById(dailyRecordId).getDate();
     }
+
+
+    @GetMapping ("/product-details")
+    public String showProductDetails(@RequestParam("nutritionId") Integer nutritionId, Model model) {
+
+        Optional<Nutrition> nutrition = nutritionService.findById(nutritionId);
+
+        if(nutrition.isPresent()) {
+            Nutrition nutritionDetails = nutrition.get();
+            model.addAttribute("nutritionDetails", nutritionDetails);
+
+        } else {
+            model.addAttribute("error", "Nutrition record not found.");
+        }
+
+        return "product-details";
+
+
+    }
+
+    @PostMapping("/update-grams")
+    public String updateNutritionGrams(@RequestParam("nutritionId") Integer nutritionId,
+                                       @RequestParam("grams") Double grams, Model model) {
+        try {
+            nutritionService.updateGramsAndRecalculateNutrition(nutritionId, grams);
+            Optional<Nutrition> nutritionOpt = nutritionService.findById(nutritionId);
+            nutritionOpt.ifPresent(nutrition -> model.addAttribute("nutritionDetails", nutrition));
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("error", e.getMessage());
+        }
+
+        return "product-details";
+    }
+
+
+
+
 
 
 
