@@ -18,4 +18,13 @@ public class ExerciseService {
         return exerciseRepository.findAll();
     }
 
+    public List<String> findAllMuscleGroups() {
+        return exerciseRepository.findDistinctMuscleGroups();
+    }
+
+
+    public List<Exercise> findByMuscleGroup(String muscleGroup) {
+        return exerciseRepository.findByMuscleGroup(muscleGroup);
+    }
+
 }
