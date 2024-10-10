@@ -1,19 +1,18 @@
 package com.gymohrim.controller;
 
 
-import com.gymohrim.dto.openfoodfacts.api.ProductDetailsDto;
 import com.gymohrim.entity.*;
-import com.gymohrim.service.api.OpenFoodFactsService;
 import com.gymohrim.service.statistics.DailyRecordService;
 import com.gymohrim.service.statistics.NutritionService;
-import com.gymohrim.service.statistics.WorkoutService;
 import com.gymohrim.service.user.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -29,10 +28,7 @@ public class DailyRecordController {
 
     private final UserProfileService userProfileService;
     private final DailyRecordService dailyRecordService;
-    private final WorkoutService workoutService;
     private final NutritionService nutritionService;
-    private final OpenFoodFactsService openFoodFactsService;
-
 
     @GetMapping
     public String showDailyRecord(@RequestParam("selectedDate") String selectedDate,
@@ -76,99 +72,6 @@ public class DailyRecordController {
 
         return "daily-record";
     }
-
-    @PostMapping("/save-workout")
-    public String saveWorkout(@ModelAttribute Workout workout, @RequestParam("dailyRecordId") Integer dailyRecordId) {
-        DailyRecord dailyRecord = dailyRecordService.findById(dailyRecordId);
-        workout.setDailyRecord(dailyRecord);
-        workoutService.saveOrUpdateWorkout(workout);
-        return "redirect:/daily-record?selectedDate=" + dailyRecord.getDate();
-    }
-
-
-    @PostMapping("/save-nutrition")
-    public String saveNutrition(@RequestParam(value = "productSearch", required = false) String productName,
-                                @RequestParam("barcode") String barcode,
-                                @RequestParam("dailyRecordId") Integer dailyRecordId,
-                                @RequestParam(value = "grams", required = false) Double grams,
-                                Model model) {
-        DailyRecord dailyRecord = dailyRecordService.findById(dailyRecordId);
-
-        if (barcode != null && !barcode.isEmpty()) {
-            ProductDetailsDto productDetails = openFoodFactsService.getProductInfo(barcode);
-            if (productDetails != null) {
-                if (grams != null) {
-                    nutritionService.addNutrition(dailyRecord, barcode, productDetails, grams);
-                }
-            }
-        } else if (productName != null && !productName.isEmpty()) {
-            List<Product> foundProducts = nutritionService.searchProducts(productName);
-            model.addAttribute("dailyRecord", dailyRecord);
-            if (!foundProducts.isEmpty()) {
-                model.addAttribute("foundProducts", foundProducts);
-
-            } else {
-                model.addAttribute("error", "No record found for the selected date.");
-            }
-            return "product-selection";
-
-        }
-
-        return "redirect:/daily-record?selectedDate=" + dailyRecord.getDate();
-    }
-
-
-
-
-    @GetMapping("/search-products")
-    @ResponseBody
-    public List<Product> searchProducts(@RequestParam("query") String query) {
-        return nutritionService.searchProducts(query);
-    }
-
-    @PostMapping("/delete-nutrition")
-    public String deleteNutrition(@RequestParam("nutritionId") Integer nutritionId,
-                                  @RequestParam("dailyRecordId") Integer dailyRecordId) {
-        nutritionService.deleteNutrition(nutritionId); // Удаляем запись о питании
-        return "redirect:/daily-record?selectedDate=" + dailyRecordService.findById(dailyRecordId).getDate();
-    }
-
-
-    @GetMapping("/product-details")
-    public String showProductDetails(@RequestParam("nutritionId") Integer nutritionId,
-                                     @RequestParam("selectedDate") String selectedDate,
-                                     Model model) {
-
-        Optional<Nutrition> nutrition = nutritionService.findById(nutritionId);
-
-        if(nutrition.isPresent()) {
-            Nutrition nutritionDetails = nutrition.get();
-            model.addAttribute("nutritionDetails", nutritionDetails);
-            model.addAttribute("selectedDate", selectedDate);  // Передаем selectedDate в модель
-        } else {
-            model.addAttribute("error", "Nutrition record not found.");
-        }
-
-        return "product-details";
-    }
-
-
-    @PostMapping("/update-grams")
-    public String updateNutritionGrams(@RequestParam("nutritionId") Integer nutritionId,
-                                       @RequestParam("grams") Double grams, Model model) {
-        try {
-            nutritionService.updateGramsAndRecalculateNutrition(nutritionId, grams);
-            Optional<Nutrition> nutritionOpt = nutritionService.findById(nutritionId);
-            nutritionOpt.ifPresent(nutrition -> model.addAttribute("nutritionDetails", nutrition));
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("error", e.getMessage());
-        }
-
-        return "product-details";
-    }
-
-
-
 
 
 
