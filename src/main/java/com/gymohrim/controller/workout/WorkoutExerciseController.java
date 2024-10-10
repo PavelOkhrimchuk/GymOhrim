@@ -61,4 +61,13 @@ public class WorkoutExerciseController {
         workoutExerciseService.deleteWorkoutExercise(id);
         return "redirect:/workout-exercise?workoutId=" + workoutId;
     }
+
+    @GetMapping("/exercise/{id}")
+    public String showExerciseDetails(@PathVariable ("id") Integer  exerciseId, @RequestParam("workoutId") Integer workoutId, Model model) {
+        Exercise exercise = exerciseService.findById(exerciseId);
+        model.addAttribute("workoutId", workoutId);
+        model.addAttribute("exerciseId", exerciseId);
+        model.addAttribute("exercise", exercise);
+        return "exercise-details";
+    }
 }
