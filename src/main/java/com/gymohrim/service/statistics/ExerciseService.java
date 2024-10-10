@@ -27,4 +27,8 @@ public class ExerciseService {
         return exerciseRepository.findByMuscleGroup(muscleGroup);
     }
 
+
+    public Exercise findById(Integer id) {
+        return exerciseRepository.findById(id).orElse(null);
+    }
 }
