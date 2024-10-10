@@ -134,23 +134,24 @@ public class DailyRecordController {
     }
 
 
-    @GetMapping ("/product-details")
-    public String showProductDetails(@RequestParam("nutritionId") Integer nutritionId, Model model) {
+    @GetMapping("/product-details")
+    public String showProductDetails(@RequestParam("nutritionId") Integer nutritionId,
+                                     @RequestParam("selectedDate") String selectedDate,
+                                     Model model) {
 
         Optional<Nutrition> nutrition = nutritionService.findById(nutritionId);
 
         if(nutrition.isPresent()) {
             Nutrition nutritionDetails = nutrition.get();
             model.addAttribute("nutritionDetails", nutritionDetails);
-
+            model.addAttribute("selectedDate", selectedDate);  // Передаем selectedDate в модель
         } else {
             model.addAttribute("error", "Nutrition record not found.");
         }
 
         return "product-details";
-
-
     }
+
 
     @PostMapping("/update-grams")
     public String updateNutritionGrams(@RequestParam("nutritionId") Integer nutritionId,
