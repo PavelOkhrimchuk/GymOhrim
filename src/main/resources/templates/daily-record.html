@@ -89,7 +89,8 @@
     <tr th:each="nutrition : ${dailyRecord.nutritionList}">
         <td>
 
-            <a th:href="@{/daily-record/product-details(nutritionId=${nutrition.id})}" th:text="${nutrition.product.name}"></a>
+            <a th:href="@{/daily-record/product-details(nutritionId=${nutrition.id}, selectedDate=${dailyRecord.date})}" th:text="${nutrition.product.name}"></a>
+
         </td>
         <td th:text="${nutrition.calories}"></td>
         <td th:text="${nutrition.protein}"></td>
