@@ -18,7 +18,7 @@
     <p><strong>Carbohydrates:</strong> <span th:text="${nutritionDetails.carbohydrates}"></span> g</p>
 
 
-    <form th:action="@{/daily-record/update-grams}" method="post">
+    <form th:action="@{/nutrition/update-grams}" method="post">
         <input type="hidden" name="nutritionId" th:value="${nutritionDetails.id}" />
         <label for="grams">Grams:</label>
         <input type="number" id="grams" name="grams" th:value="${nutritionDetails.grams}" step="0.1" min="0" />
