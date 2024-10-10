@@ -12,7 +12,7 @@
 <form th:action="@{/workout-exercise(workoutId=${workoutId})}" method="post">
     <input type="hidden" name="workoutId" th:value="${workoutId}"/>
 
-    <!-- Группа мышц -->
+
     <label for="muscleGroup">Muscle Group:</label>
     <select id="muscleGroup" name="muscleGroup">
         <option value="">Select Muscle Group</option>
@@ -20,11 +20,11 @@
     </select>
     <br/><br/>
 
-    <!-- Упражнения -->
+
     <label for="exercise">Exercise:</label>
     <select name="exercise.id" id="exercise" required>
         <option value="">Select Exercise</option>
-        <!-- Упражнения будут динамически обновляться через JavaScript -->
+
     </select>
     <br/><br/>
 
@@ -53,7 +53,9 @@
     </thead>
     <tbody>
     <tr th:each="workoutExercise: ${addedExercises}">
-        <td th:text="${workoutExercise.exercise.name}"></td>
+        <td>
+            <a th:href="@{/workout-exercise/exercise/{id}(id=${workoutExercise.exercise.id}, workoutId=${workoutId})}" th:text="${workoutExercise.exercise.name}"></a>
+        </td>
         <td th:text="${workoutExercise.sets}"></td>
         <td th:text="${workoutExercise.reps}"></td>
         <td th:text="${workoutExercise.weight}"></td>
@@ -64,19 +66,20 @@
                 <button type="submit">Delete</button>
             </form>
         </td>
+
     </tr>
     </tbody>
 </table>
 
 <script>
-    // JQuery для обновления списка упражнений при изменении группы мышц
+
     $(document).ready(function () {
         $('#muscleGroup').change(function () {
             var selectedGroup = $(this).val();
 
             $.ajax({
                 type: 'GET',
-                url: '/workout-exercise/exercises', // Контроллер для получения упражнений по группе мышц
+                url: '/workout-exercise/exercises',
                 data: { muscleGroup: selectedGroup },
                 success: function (exercises) {
                     $('#exercise').empty();
