@@ -9,6 +9,10 @@
 <body>
 <h1>Add Exercises to Workout</h1>
 
+<div th:if="${error}" style="color: red;">
+    <p th:text="${error}"></p>
+</div>
+
 <form th:action="@{/workout-exercise(workoutId=${workoutId})}" method="post">
     <input type="hidden" name="workoutId" th:value="${workoutId}"/>
 

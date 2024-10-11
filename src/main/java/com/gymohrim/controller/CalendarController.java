@@ -44,8 +44,7 @@ public class CalendarController {
             User user = userProfileService.findByEmail(userDetails.getUsername());
 
             if (dailyRecordService.existsByDateAndUser(date, user)) {
-                model.addAttribute("error", "Запись на выбранную дату уже существует. Пожалуйста, выберите другую дату.");
-                return "calendar-form"; // Возвращаем форму с ошибкой
+                return "redirect:/daily-record?selectedDate=" + selectedDate;
             }
 
             dailyRecordService.saveDailyRecord(date, user);

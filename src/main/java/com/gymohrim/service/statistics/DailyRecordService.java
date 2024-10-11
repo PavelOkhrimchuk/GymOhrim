@@ -30,6 +30,10 @@ public class DailyRecordService {
     }
 
     public Optional<DailyRecord> findByDateAndUser(Date date, User user) {
+        if (date == null || user == null) {
+            throw new IllegalArgumentException("Date and user must not be null.");
+        }
+
         return dailyRecordRepository.findByDateAndUser(date, user);
     }
 

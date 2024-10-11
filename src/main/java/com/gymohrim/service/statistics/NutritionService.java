@@ -11,7 +11,10 @@ import com.gymohrim.util.RoundingUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;import java.util.Optional;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -85,6 +88,20 @@ public class NutritionService {
         }
     }
 
+    public Map<String, Double> calculateNutritionTotals(List<Nutrition> nutritionList) {
+        double totalCalories = nutritionList.stream().mapToDouble(Nutrition::getCalories).sum();
+        double totalProtein = nutritionList.stream().mapToDouble(Nutrition::getProtein).sum();
+        double totalFat = nutritionList.stream().mapToDouble(Nutrition::getFat).sum();
+        double totalCarbohydrates = nutritionList.stream().mapToDouble(Nutrition::getCarbohydrates).sum();
+
+        Map<String, Double> totals = new HashMap<>();
+        totals.put("calories", totalCalories);
+        totals.put("protein", totalProtein);
+        totals.put("fat", totalFat);
+        totals.put("carbohydrates", totalCarbohydrates);
+
+        return totals;
+    }
 
 
 
