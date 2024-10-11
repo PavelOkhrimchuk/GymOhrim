@@ -24,4 +24,6 @@ public class Exercise {
     private String description;
 
     private String muscleGroup;
+
+    private String mediaUrl;
 }

@@ -4,21 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Exercises to Workout</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
 <h1>Add Exercises to Workout</h1>
-
 
 <form th:action="@{/workout-exercise(workoutId=${workoutId})}" method="post">
     <input type="hidden" name="workoutId" th:value="${workoutId}"/>
 
 
-    <label for="exercise">Exercise:</label>
-    <select name="exercise.id" id="exercise" required>
-        <option th:each="exercise : ${exercises}" th:value="${exercise.id}" th:text="${exercise.name}"></option>
+    <label for="muscleGroup">Muscle Group:</label>
+    <select id="muscleGroup" name="muscleGroup">
+        <option value="">Select Muscle Group</option>
+        <option th:each="group : ${muscleGroups}" th:value="${group}" th:text="${group}"></option>
     </select>
     <br/><br/>
 
+
+    <label for="exercise">Exercise:</label>
+    <select name="exercise.id" id="exercise" required>
+        <option value="">Select Exercise</option>
+
+    </select>
+    <br/><br/>
 
     <label for="sets">Sets:</label>
     <input type="number" name="sets" id="sets" min="1" th:value="${workoutExercise.sets}" required/><br/><br/>
@@ -27,8 +35,7 @@
     <input type="number" name="reps" id="reps" min="1" th:value="${workoutExercise.reps}" required/><br/><br/>
 
     <label for="weight">Weight (kg):</label>
-    <input type="number" name="weight" id="weight" step="0.1" min="0" th:value="${workoutExercise.weight}"
-           required/><br/><br/>
+    <input type="number" name="weight" id="weight" step="0.1" min="0" th:value="${workoutExercise.weight}" required/><br/><br/>
 
     <button type="submit">Add Exercise</button>
 </form>
@@ -46,7 +53,9 @@
     </thead>
     <tbody>
     <tr th:each="workoutExercise: ${addedExercises}">
-        <td th:text="${workoutExercise.exercise.name}"></td>
+        <td>
+            <a th:href="@{/workout-exercise/exercise/{id}(id=${workoutExercise.exercise.id}, workoutId=${workoutId})}" th:text="${workoutExercise.exercise.name}"></a>
+        </td>
         <td th:text="${workoutExercise.sets}"></td>
         <td th:text="${workoutExercise.reps}"></td>
         <td th:text="${workoutExercise.weight}"></td>
@@ -57,9 +66,32 @@
                 <button type="submit">Delete</button>
             </form>
         </td>
+
     </tr>
     </tbody>
 </table>
+
+<script>
+
+    $(document).ready(function () {
+        $('#muscleGroup').change(function () {
+            var selectedGroup = $(this).val();
+
+            $.ajax({
+                type: 'GET',
+                url: '/workout-exercise/exercises',
+                data: { muscleGroup: selectedGroup },
+                success: function (exercises) {
+                    $('#exercise').empty();
+                    $('#exercise').append('<option value="">Select Exercise</option>');
+                    exercises.forEach(function (exercise) {
+                        $('#exercise').append('<option value="' + exercise.id + '">' + exercise.name + '</option>');
+                    });
+                }
+            });
+        });
+    });
+</script>
 
 </body>
 </html>

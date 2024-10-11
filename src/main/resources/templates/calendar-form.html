@@ -28,10 +28,12 @@
 <body>
 
 <h1>Select a Date</h1>
-
+<div th:if="${error}" style="color: red;">
+    <p th:text="${error}"></p>
+</div>
 <div id='calendar'></div>
 
-<!-- Поле для отображения выбранной даты -->
+
 <input type="text" id="selectedDateDisplay" placeholder="Selected date will appear here" readonly />
 
 <form th:action="@{/calendar/submit}" method="post">

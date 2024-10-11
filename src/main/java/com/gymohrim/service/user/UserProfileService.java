@@ -23,6 +23,7 @@ public class UserProfileService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
+
     public Optional<UserProfile> getUserProfile(User user) {
         return userProfileRepository.findByUser(user);
     }
@@ -31,25 +32,24 @@ public class UserProfileService {
 
         if (userProfile.getId() != null && userProfileRepository.existsById(userProfile.getId())) {
             userProfileRepository.save(userProfile);
-            return;
+        } else {
+
+            Optional<UserProfile> existingProfile = userProfileRepository.findByUser(userProfile.getUser());
+            if (existingProfile.isPresent()) {
+                UserProfile existing = existingProfile.get();
+                existing.setWeight(userProfile.getWeight());
+                existing.setHeight(userProfile.getHeight());
+                existing.setGender(userProfile.getGender());
+                existing.setBirthDate(userProfile.getBirthDate());
+                existing.setProfilePictureUrl(userProfile.getProfilePictureUrl());
+                userProfileRepository.save(existing);
+            } else {
+
+                userProfileRepository.save(userProfile);
+            }
         }
-
-
-        Optional<UserProfile> existingProfile = userProfileRepository.findByUser(userProfile.getUser());
-        if (existingProfile.isPresent()) {
-            UserProfile existing = existingProfile.get();
-
-            existing.setWeight(userProfile.getWeight());
-            existing.setHeight(userProfile.getHeight());
-            existing.setGender(userProfile.getGender());
-            existing.setBirthDate(userProfile.getBirthDate());
-            existing.setProfilePictureUrl(userProfile.getProfilePictureUrl());
-            userProfileRepository.save(existing);
-            return;
-        }
-
-        userProfileRepository.save(userProfile);
     }
+
 
 
     public void deleteUserProfile(UserProfile userProfile) {

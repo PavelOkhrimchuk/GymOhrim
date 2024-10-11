@@ -28,12 +28,16 @@ public class WorkoutExerciseController {
     @GetMapping
     public String showWorkoutExercise(@RequestParam("workoutId") Integer workoutId, Model model) {
         List<Exercise> exercises = exerciseService.findAllExercises();
+        List<String> muscleGroups = exerciseService.findAllMuscleGroups();
+
         model.addAttribute("exercises", exercises);
+        model.addAttribute("muscleGroups", muscleGroups);
         model.addAttribute("workoutExercise", new WorkoutExercise());
         model.addAttribute("workoutId", workoutId);
 
         List<WorkoutExercise> addedExercises = workoutExerciseService.findByWorkoutId(workoutId);
         model.addAttribute("addedExercises", addedExercises);
+
         return "workout-exercise";
     }
 
@@ -46,9 +50,24 @@ public class WorkoutExerciseController {
 
     }
 
+    @GetMapping("/exercises")
+    @ResponseBody
+    public List<Exercise> getExercisesByMuscleGroup(@RequestParam String muscleGroup) {
+        return exerciseService.findByMuscleGroup(muscleGroup);
+    }
+
     @PostMapping("/delete")
     public String deleteWorkoutExercise(@RequestParam("workoutId") Integer workoutId, @RequestParam("id") Integer id) {
         workoutExerciseService.deleteWorkoutExercise(id);
         return "redirect:/workout-exercise?workoutId=" + workoutId;
+    }
+
+    @GetMapping("/exercise/{id}")
+    public String showExerciseDetails(@PathVariable ("id") Integer  exerciseId, @RequestParam("workoutId") Integer workoutId, Model model) {
+        Exercise exercise = exerciseService.findById(exerciseId);
+        model.addAttribute("workoutId", workoutId);
+        model.addAttribute("exerciseId", exerciseId);
+        model.addAttribute("exercise", exercise);
+        return "exercise-details";
     }
 }

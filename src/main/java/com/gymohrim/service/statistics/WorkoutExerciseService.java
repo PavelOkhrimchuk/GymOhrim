@@ -3,7 +3,6 @@ package com.gymohrim.service.statistics;
 
 import com.gymohrim.entity.WorkoutExercise;
 import com.gymohrim.repository.WorkoutExerciseRepository;
-import com.gymohrim.repository.WorkoutRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +14,7 @@ import java.util.Optional;
 public class WorkoutExerciseService {
 
     private final WorkoutExerciseRepository workoutExerciseRepository;
-    private final WorkoutRepository workoutRepository;
+
 
 
 
@@ -47,6 +46,8 @@ public class WorkoutExerciseService {
     public void deleteWorkoutExercise(Integer id) {
         workoutExerciseRepository.deleteById(id);
     }
+
+
 
 
 }
