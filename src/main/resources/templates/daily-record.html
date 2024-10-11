@@ -29,8 +29,10 @@
 
 <form th:action="@{/workout-exercise}" method="get">
     <input type="hidden" name="workoutId" th:value="${workout.id}"/>
+    <input type="hidden" name="selectedDate" th:value="${dailyRecord.date}"/>
     <button type="submit">Add Exercises</button>
 </form>
+
 
 <h2>Nutrition</h2>
 <form th:action="@{/nutrition/save-nutrition}" method="post">
