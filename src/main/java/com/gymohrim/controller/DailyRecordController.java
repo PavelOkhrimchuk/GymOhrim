@@ -5,6 +5,7 @@ import com.gymohrim.entity.*;
 import com.gymohrim.service.statistics.DailyRecordService;
 import com.gymohrim.service.statistics.NutritionService;
 import com.gymohrim.service.user.UserProfileService;
+import com.gymohrim.util.DateParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,11 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -35,10 +32,10 @@ public class DailyRecordController {
                                   @AuthenticationPrincipal UserDetails userDetails, Model model) {
         User user = userProfileService.findByEmail(userDetails.getUsername());
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date;
+
         try {
-            date = dateFormat.parse(selectedDate);
+            date = DateParser.parseDate(selectedDate);
         } catch (ParseException e) {
             model.addAttribute("error", "Invalid date format");
             return "daily-record";
@@ -47,22 +44,24 @@ public class DailyRecordController {
         Optional<DailyRecord> dailyRecordOpt = dailyRecordService.findByDateAndUser(date, user);
 
         if (dailyRecordOpt.isPresent()) {
+
             DailyRecord dailyRecord = dailyRecordOpt.get();
             model.addAttribute("dailyRecord", dailyRecord);
 
             Workout workout = dailyRecord.getWorkout();
             model.addAttribute("workout", workout != null ? workout : new Workout());
-            List<Nutrition> nutritionList = dailyRecord.getNutritionList();
 
+            List<Nutrition> nutritionList = dailyRecord.getNutritionList();
             model.addAttribute("nutritionList", nutritionList != null ? nutritionList : new ArrayList<>());
-            int totalCalories = nutritionList.stream().mapToInt(Nutrition::getCalories).sum();
-            double totalProtein = nutritionList.stream().mapToDouble(Nutrition::getProtein).sum();
-            double totalFat = nutritionList.stream().mapToDouble(Nutrition::getFat).sum();
-            double totalCarbohydrates = nutritionList.stream().mapToDouble(Nutrition::getCarbohydrates).sum();
-            model.addAttribute("totalCalories", totalCalories);
-            model.addAttribute("totalProtein", totalProtein);
-            model.addAttribute("totalFat", totalFat);
-            model.addAttribute("totalCarbohydrates", totalCarbohydrates);
+
+
+            Map<String, Double> totals = nutritionService.calculateNutritionTotals(nutritionList);
+
+            model.addAttribute("totalCalories", totals.get("calories"));
+            model.addAttribute("totalProtein", totals.get("protein"));
+            model.addAttribute("totalFat", totals.get("fat"));
+
+            model.addAttribute("totalCarbohydrates", totals.get("carbohydrates"));
         } else {
             model.addAttribute("error", "No record found for the selected date.");
         }
@@ -72,6 +71,7 @@ public class DailyRecordController {
 
         return "daily-record";
     }
+
 
 
 
