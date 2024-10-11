@@ -3,6 +3,7 @@ package com.gymohrim.service.statistics;
 
 import com.gymohrim.entity.DailyRecord;
 import com.gymohrim.entity.User;
+import com.gymohrim.exception.DailyRecordNotFoundException;
 import com.gymohrim.repository.DailyRecordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,10 +34,12 @@ public class DailyRecordService {
     }
 
     public DailyRecord findById(Integer id) {
-        return dailyRecordRepository.findById(id).orElseThrow(() -> new RuntimeException("Record not found"));
+        return dailyRecordRepository.findById(id)
+                .orElseThrow(() -> new DailyRecordNotFoundException("Record with ID " + id + " not found"));
     }
 
 
 
-    
+
+
 }
