@@ -36,8 +36,7 @@ public class UserProfileController {
     public String updateProfile(@ModelAttribute("profile") @Valid UserProfile userProfile,
                                 @AuthenticationPrincipal UserDetails userDetails,
                                 BindingResult bindingResult,
-                                @RequestParam("profilePicture") MultipartFile profilePicture,
-                                Model model) throws Exception {
+                                @RequestParam("profilePicture") MultipartFile profilePicture) throws Exception {
         if (bindingResult.hasErrors()) {
             return "profile";
         }

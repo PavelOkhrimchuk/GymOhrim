@@ -26,7 +26,8 @@ public class WorkoutExerciseController {
 
 
     @GetMapping
-    public String showWorkoutExercise(@RequestParam("workoutId") Integer workoutId, Model model) {
+    public String showWorkoutExercise(@RequestParam("workoutId") Integer workoutId,   @RequestParam("selectedDate") String selectedDate, Model model) {
+
         List<Exercise> exercises = exerciseService.findAllExercises();
         List<String> muscleGroups = exerciseService.findAllMuscleGroups();
 

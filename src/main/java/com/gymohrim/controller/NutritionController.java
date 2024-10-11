@@ -31,15 +31,19 @@ public class NutritionController {
                                 @RequestParam("dailyRecordId") Integer dailyRecordId,
                                 @RequestParam(value = "grams", required = false) Double grams,
                                 Model model) {
+
         DailyRecord dailyRecord = dailyRecordService.findById(dailyRecordId);
 
         if (barcode != null && !barcode.isEmpty()) {
+
             ProductDetailsDto productDetails = openFoodFactsService.getProductInfo(barcode);
+
             if (productDetails != null) {
                 if (grams != null) {
                     nutritionService.addNutrition(dailyRecord, barcode, productDetails, grams);
                 }
             }
+
         } else if (productName != null && !productName.isEmpty()) {
             List<Product> foundProducts = nutritionService.searchProducts(productName);
             model.addAttribute("dailyRecord", dailyRecord);
@@ -64,6 +68,7 @@ public class NutritionController {
     public List<Product> searchProducts(@RequestParam("query") String query) {
         return nutritionService.searchProducts(query);
     }
+
 
     @PostMapping("/delete-nutrition")
     public String deleteNutrition(@RequestParam("nutritionId") Integer nutritionId,
@@ -100,7 +105,7 @@ public class NutritionController {
             Optional<Nutrition> nutritionOpt = nutritionService.findById(nutritionId);
             nutritionOpt.ifPresent(nutrition -> model.addAttribute("nutritionDetails", nutrition));
         } catch (IllegalArgumentException e) {
-            model.addAttribute("error", e.getMessage());
+            model.addAttribute("error", "Nutrition record not updated");
         }
 
         return "product-details";
