@@ -2,6 +2,7 @@ package com.gymohrim.controller.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -34,4 +35,12 @@ public class GlobalExceptionHandler {
         model.addAttribute("error", "An unexpected error occurred. Please try again later.");
         return "error";
     }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleMissingException(MissingServletRequestParameterException e, Model model) {
+        model.addAttribute("error", "Please create a workout first.");
+        return "error";
+    }
+
 }
