@@ -26,7 +26,7 @@ public class WorkoutExerciseController {
 
 
     @GetMapping
-    public String showWorkoutExercise(@RequestParam("workoutId") Integer workoutId,   @RequestParam("selectedDate") String selectedDate, Model model) {
+    public String showWorkoutExercise(@RequestParam("workoutId") Integer workoutId,  @RequestParam(value = "selectedDate", required = false) String selectedDate, Model model) {
 
         List<Exercise> exercises = exerciseService.findAllExercises();
         List<String> muscleGroups = exerciseService.findAllMuscleGroups();
@@ -35,6 +35,7 @@ public class WorkoutExerciseController {
         model.addAttribute("muscleGroups", muscleGroups);
         model.addAttribute("workoutExercise", new WorkoutExercise());
         model.addAttribute("workoutId", workoutId);
+        model.addAttribute("selectedDate", selectedDate);
 
         List<WorkoutExercise> addedExercises = workoutExerciseService.findByWorkoutId(workoutId);
         model.addAttribute("addedExercises", addedExercises);
