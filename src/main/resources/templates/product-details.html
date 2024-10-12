@@ -37,7 +37,9 @@
 
 <a href="/calendar">Go to Calendar</a>
 
-<a th:href="@{/daily-record(selectedDate=${selectedDate})}">Back to Daily Record</a>
+<a th:if="${selectedDate != null}" th:href="@{/daily-record(selectedDate=${selectedDate})}">Back to Daily Record</a>
+<a th:if="${selectedDate == null}" href="/daily-record">Back to Daily Record</a>
+
 
 
 </body>
