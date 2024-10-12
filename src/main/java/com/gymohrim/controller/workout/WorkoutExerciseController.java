@@ -43,13 +43,15 @@ public class WorkoutExerciseController {
     }
 
     @PostMapping
-    public String changeWorkoutExercise(@ModelAttribute WorkoutExercise workoutExercise, @RequestParam("workoutId") Integer workoutId) {
+    public String changeWorkoutExercise(@ModelAttribute WorkoutExercise workoutExercise,
+                                        @RequestParam("workoutId") Integer workoutId,
+                                        @RequestParam("selectedDate") String selectedDate) {
         Workout workout = workoutService.findById(workoutId);
         workoutExercise.setWorkout(workout);
         workoutExerciseService.saveOrUpdateWorkoutExercise(workoutExercise);
-        return "redirect:/workout-exercise?workoutId=" + workout.getId();
-
+        return "redirect:/workout-exercise?workoutId=" + workout.getId() + "&selectedDate=" + selectedDate;
     }
+
 
     @GetMapping("/exercises")
     @ResponseBody
@@ -64,11 +66,17 @@ public class WorkoutExerciseController {
     }
 
     @GetMapping("/exercise/{id}")
-    public String showExerciseDetails(@PathVariable ("id") Integer  exerciseId, @RequestParam("workoutId") Integer workoutId, Model model) {
+    public String showExerciseDetails(@PathVariable("id") Integer exerciseId,
+                                      @RequestParam("workoutId") Integer workoutId,
+                                      @RequestParam(value = "selectedDate", required = false) String selectedDate,
+                                      Model model) {
         Exercise exercise = exerciseService.findById(exerciseId);
         model.addAttribute("workoutId", workoutId);
         model.addAttribute("exerciseId", exerciseId);
         model.addAttribute("exercise", exercise);
+        model.addAttribute("selectedDate", selectedDate);
         return "exercise-details";
     }
+
+
 }
