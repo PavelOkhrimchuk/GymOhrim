@@ -18,7 +18,7 @@
 <div th:if="${exercise.mediaUrl == null}">
     <p>No video available for this exercise.</p>
 </div>
+<a th:href="@{/workout-exercise(workoutId=${workoutId}, selectedDate=${selectedDate})}">Back to workout</a>
 
-<a th:href="@{/workout-exercise(workoutId=${workoutId})}">Back to workout</a>
 </body>
 </html>

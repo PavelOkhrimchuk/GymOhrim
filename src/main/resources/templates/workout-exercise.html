@@ -15,7 +15,7 @@
 
 <form th:action="@{/workout-exercise(workoutId=${workoutId})}" method="post">
     <input type="hidden" name="workoutId" th:value="${workoutId}"/>
-
+    <input type="hidden" name="selectedDate" th:value="${dailyRecordDate}"/>
 
     <label for="muscleGroup">Muscle Group:</label>
     <select id="muscleGroup" name="muscleGroup">
@@ -96,6 +96,9 @@
         });
     });
 </script>
+
+
+<a href="/calendar">Go to Calendar</a>
 
 </body>
 </html>
