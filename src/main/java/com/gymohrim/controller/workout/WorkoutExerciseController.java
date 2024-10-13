@@ -4,6 +4,7 @@ package com.gymohrim.controller.workout;
 import com.gymohrim.entity.Exercise;
 import com.gymohrim.entity.Workout;
 import com.gymohrim.entity.WorkoutExercise;
+import com.gymohrim.service.statistics.DailyRecordService;
 import com.gymohrim.service.statistics.ExerciseService;
 import com.gymohrim.service.statistics.WorkoutExerciseService;
 import com.gymohrim.service.statistics.WorkoutService;
@@ -23,13 +24,22 @@ public class WorkoutExerciseController {
     private final WorkoutExerciseService workoutExerciseService;
     private final ExerciseService exerciseService;
     private final WorkoutService workoutService;
-
+    private final DailyRecordService dailyRecordService;
 
     @GetMapping
-    public String showWorkoutExercise(@RequestParam("workoutId") Integer workoutId,  @RequestParam(value = "selectedDate", required = false) String selectedDate, Model model) {
+    public String showWorkoutExercise(
+            @RequestParam(value = "workoutId", required = false) Integer workoutId,
+            @RequestParam(value = "selectedDate", required = false) String selectedDate,
+            @RequestParam(value = "dailyRecordId", required = false) Integer dailyRecordId,
+            Model model) {
+
+        Workout workout = getOrCreateWorkout(workoutId, dailyRecordId);
+        workoutId = workout.getId();
+
 
         List<Exercise> exercises = exerciseService.findAllExercises();
         List<String> muscleGroups = exerciseService.findAllMuscleGroups();
+
 
         model.addAttribute("exercises", exercises);
         model.addAttribute("muscleGroups", muscleGroups);
@@ -37,11 +47,13 @@ public class WorkoutExerciseController {
         model.addAttribute("workoutId", workoutId);
         model.addAttribute("selectedDate", selectedDate);
 
+
         List<WorkoutExercise> addedExercises = workoutExerciseService.findByWorkoutId(workoutId);
         model.addAttribute("addedExercises", addedExercises);
 
         return "workout-exercise";
     }
+
 
     @PostMapping
     public String changeWorkoutExercise(@ModelAttribute WorkoutExercise workoutExercise,
@@ -77,6 +89,20 @@ public class WorkoutExerciseController {
         model.addAttribute("exercise", exercise);
         model.addAttribute("selectedDate", selectedDate);
         return "exercise-details";
+    }
+
+
+    private Workout getOrCreateWorkout(Integer workoutId, Integer dailyRecordId) {
+        Workout workout;
+
+
+        if (workoutId == null || (workout = workoutService.findById(workoutId)) == null) {
+            workout = new Workout();
+            workout.setDailyRecord(dailyRecordService.findById(dailyRecordId));
+            workoutService.saveOrUpdateWorkout(workout);
+        }
+
+        return workout;
     }
 
 
