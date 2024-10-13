@@ -67,5 +67,11 @@ public class SecurityConfiguration {
 
 
 
+    public static String encodePassword(String password) {
+        return new BCryptPasswordEncoder().encode(password);
+    }
+
+
+
 
 }
