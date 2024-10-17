@@ -9,6 +9,7 @@ import com.gymohrim.repository.NutritionRepository;
 import com.gymohrim.repository.ProductRepository;
 import com.gymohrim.util.RoundingUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class NutritionService {
 
     private final NutritionRepository nutritionRepository;
@@ -41,10 +43,12 @@ public class NutritionService {
 
 
         nutritionRepository.save(nutrition);
+        log.info("Added nutrition for product: {}, grams: {}", product.getName(), grams);
     }
 
     public List<Product> searchProducts(String query) {
         if (query == null || query.isEmpty()) {
+            log.warn("Search query is null or empty");
             return List.of();
         }
 
@@ -52,10 +56,12 @@ public class NutritionService {
     }
 
     public void deleteNutrition(Integer id) {
+        log.info("Deleting nutrition record with ID: {}", id);
         nutritionRepository.deleteById(id);
     }
 
     public Optional<Nutrition> findById(Integer id) {
+        log.info("Finding nutrition record with ID: {}", id);
         return nutritionRepository.findById(id);
     }
 
@@ -80,10 +86,13 @@ public class NutritionService {
                 nutrition.setGrams(newGrams);
 
                 nutritionRepository.save(nutrition);
+                log.info("Updated nutrition record ID: {}, new grams: {}", nutritionId, newGrams);
             } else {
+                log.error("Original grams cannot be zero or negative for nutrition ID: {}", nutritionId);
                 throw new IllegalArgumentException("Original grams cannot be zero or negative.");
             }
         } else {
+            log.error("Nutrition record not found for ID: {}", nutritionId);
             throw new IllegalArgumentException("Nutrition record not found.");
         }
     }
@@ -100,6 +109,9 @@ public class NutritionService {
         totals.put("fat", totalFat);
         totals.put("carbohydrates", totalCarbohydrates);
 
+
+        log.info("Calculated nutrition totals: {}", totals);
+        log.info("Fetching all products");
         return totals;
     }
 
