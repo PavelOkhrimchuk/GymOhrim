@@ -51,30 +51,30 @@
 </form>
 
 
-<script>
-    document.getElementById('productSearch').addEventListener('input', function() {
-        const query = this.value;
-        if (query.length > 2) {
-            fetch(`/nutrition/search-products?query=${query}`)
-                .then(response => response.json())
-                .then(products => {
-                    const resultsContainer = document.getElementById('productResults');
-                    resultsContainer.innerHTML = '';
-                    products.forEach(product => {
-                        const li = document.createElement('li');
-                        li.textContent = product.name;
-                        li.dataset.barcode = product.barcode;
-                        li.addEventListener('click', function() {
-                            document.getElementById('productSearch').value = this.textContent;
-                            document.getElementById('barcode').value = this.dataset.barcode;
-                            document.getElementById('productResults').innerHTML = '';
-                        });
-                        resultsContainer.appendChild(li);
-                    });
-                });
-        }
-    });
-</script>
+<!--<script>-->
+<!--    document.getElementById('productSearch').addEventListener('input', function() {-->
+<!--        const query = this.value;-->
+<!--        if (query.length > 2) {-->
+<!--            fetch(`/nutrition/search-products?query=${query}`)-->
+<!--                .then(response => response.json())-->
+<!--                .then(products => {-->
+<!--                    const resultsContainer = document.getElementById('productResults');-->
+<!--                    resultsContainer.innerHTML = '';-->
+<!--                    products.forEach(product => {-->
+<!--                        const li = document.createElement('li');-->
+<!--                        li.textContent = product.name;-->
+<!--                        li.dataset.barcode = product.barcode;-->
+<!--                        li.addEventListener('click', function() {-->
+<!--                            document.getElementById('productSearch').value = this.textContent;-->
+<!--                            document.getElementById('barcode').value = this.dataset.barcode;-->
+<!--                            document.getElementById('productResults').innerHTML = '';-->
+<!--                        });-->
+<!--                        resultsContainer.appendChild(li);-->
+<!--                    });-->
+<!--                });-->
+<!--        }-->
+<!--    });-->
+<!--</script>-->
 
 <h3>Nutrition Records</h3>
 <table>

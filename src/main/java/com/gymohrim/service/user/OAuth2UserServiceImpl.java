@@ -5,6 +5,7 @@ import com.gymohrim.entity.User;
 import com.gymohrim.entity.account.AuthProviderType;
 import com.gymohrim.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -17,6 +18,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OAuth2UserServiceImpl implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
 
@@ -26,20 +28,32 @@ public class OAuth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2User oAuth2User = new DefaultOAuth2UserService().loadUser(userRequest);
+        log.info("Loading user from OAuth2 provider");
 
+        OAuth2User oAuth2User = new DefaultOAuth2UserService().loadUser(userRequest);
         String email = oAuth2User.getAttribute("email");
         String name = oAuth2User.getAttribute("name");
 
+        log.info("OAuth2 User info: Email = {}, Name = {}", email, name);
+
         User user = userRepository.findByEmail(email).orElseGet(() -> {
+
+            log.info("User not found, creating new user with email: {}", email);
+
             User newUser = new User();
             newUser.setEmail(email);
             newUser.setName(name);
             String randomPassword = UUID.randomUUID().toString();
             newUser.setPassword(SecurityConfiguration.encodePassword(randomPassword));
             newUser.setAuthProviderType(AuthProviderType.GOOGLE);
-            return userRepository.save(newUser);
+            User savedUser = userRepository.save(newUser);
+
+            log.info("New user created: {}", savedUser.getEmail());
+
+            return savedUser;
         });
+
+        log.info("User loaded: {}", user.getEmail());
 
         return new CustomOAuth2User(oAuth2User, user.getPassword());
     }
