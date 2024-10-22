@@ -11,6 +11,7 @@ import com.gymohrim.util.RoundingUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +27,11 @@ public class NutritionService {
 
     private final ProductRepository productRepository;
 
+
+
+
+
+    @Transactional
     public void addNutrition(DailyRecord dailyRecord, String barcode, ProductDetailsDto productDetailsDto, Double grams) {
         Product product = productRepository.findByBarcode(barcode);
 
@@ -55,6 +61,7 @@ public class NutritionService {
         return productRepository.findByFullTextSearch(query);
     }
 
+    @Transactional
     public void deleteNutrition(Integer id) {
         log.info("Deleting nutrition record with ID: {}", id);
         nutritionRepository.deleteById(id);
@@ -68,7 +75,7 @@ public class NutritionService {
 
 
 
-
+    @Transactional
     public void updateGramsAndRecalculateNutrition(Integer nutritionId, Double newGrams) {
         Optional<Nutrition> nutritionOpt = findById(nutritionId);
 
@@ -97,6 +104,8 @@ public class NutritionService {
         }
     }
 
+
+    @Transactional
     public Map<String, Double> calculateNutritionTotals(List<Nutrition> nutritionList) {
         double totalCalories = nutritionList.stream().mapToDouble(Nutrition::getCalories).sum();
         double totalProtein = nutritionList.stream().mapToDouble(Nutrition::getProtein).sum();

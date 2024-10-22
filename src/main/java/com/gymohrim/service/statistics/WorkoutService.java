@@ -6,6 +6,7 @@ import com.gymohrim.repository.WorkoutRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -16,6 +17,9 @@ public class WorkoutService {
 
     private final WorkoutRepository workoutRepository;
 
+
+
+    @Transactional
     public void saveOrUpdateWorkout(Workout workout) {
         Optional<Workout> existingWorkout = workoutRepository.findByDailyRecord(workout.getDailyRecord());
 

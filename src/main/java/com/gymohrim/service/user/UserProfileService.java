@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -36,6 +37,10 @@ public class UserProfileService {
         return userProfileRepository.findByUser(user);
     }
 
+
+
+
+    @Transactional
     public void saveOrUpdateUserProfile(UserProfile userProfile) {
         log.info("Saving or updating user profile for user: {}", userProfile.getUser().getEmail());
 
@@ -62,7 +67,7 @@ public class UserProfileService {
     }
 
 
-
+    @Transactional
     public void deleteUserProfile(UserProfile userProfile) {
         log.info("Deleting user profile with ID: {}", userProfile.getId());
         userProfileRepository.delete(userProfile);

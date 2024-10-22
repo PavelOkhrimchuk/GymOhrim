@@ -8,6 +8,7 @@ import com.gymohrim.repository.DailyRecordRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.Optional;
@@ -18,6 +19,9 @@ import java.util.Optional;
 public class DailyRecordService {
     private  final DailyRecordRepository dailyRecordRepository;
 
+
+
+    @Transactional
     public void saveDailyRecord(Date date, User user) {
         DailyRecord dailyRecord = DailyRecord.builder()
                 .user(user)
