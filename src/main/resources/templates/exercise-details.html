@@ -4,21 +4,107 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exercise Details</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f6f5f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1, h2 {
+            color: #FF4B2B;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .no-video {
+            background-color: #f2f2f2;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            color: #666;
+        }
+
+        a {
+            color: #FF4B2B;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: 2px solid #FF4B2B;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #FF4B2B;
+            color: #FFFFFF;
+        }
+    </style>
 </head>
 <body>
-<h1 th:text="${exercise.name}">Exercise Name</h1>
 
-<h2>Description:</h2>
-<p th:text="${exercise.description}">Exercise description</p>
+<div class="container">
+    <h1 th:text="${exercise.name}">Exercise Name</h1>
 
-<h2>Technique Video:</h2>
-<div th:if="${exercise.mediaUrl != null}">
-    <iframe th:src="${exercise.mediaUrl}" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <h2>Description:</h2>
+    <p th:text="${exercise.description}">Exercise description</p>
+
+    <h2>Technique Video:</h2>
+    <div class="video-container" th:if="${exercise.mediaUrl != null}">
+        <iframe th:src="${exercise.mediaUrl}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div class="no-video" th:if="${exercise.mediaUrl == null}">
+        <p>No video available for this exercise.</p>
+    </div>
+
+    <a th:href="@{/workout-exercise(workoutId=${workoutId}, selectedDate=${selectedDate})}">Back to workout</a>
 </div>
-<div th:if="${exercise.mediaUrl == null}">
-    <p>No video available for this exercise.</p>
-</div>
-<a th:href="@{/workout-exercise(workoutId=${workoutId}, selectedDate=${selectedDate})}">Back to workout</a>
 
 </body>
 </html>
