@@ -1,11 +1,75 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Error</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f6f5f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #FF4B2B;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #333;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        a {
+            background-color: #FF4B2B;
+            border: none;
+            border-radius: 20px;
+            color: #FFFFFF;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            padding: 12px 45px;
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #FF3A2B;
+        }
+    </style>
 </head>
 <body>
-<h1>Error</h1>
-<p th:text="${error}"></p>
-<a href="/profile">Go to Profile</a>
+<div class="container">
+    <h1>Error</h1>
+    <p th:text="${error}"></p>
+    <a href="/profile">Go to Profile</a>
+</div>
 </body>
 </html>
