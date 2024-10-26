@@ -1,37 +1,41 @@
 package com.gymohrim.service.statistics;
 
-import com.gymohrim.IntegrationTestBase;
 import com.gymohrim.entity.DailyRecord;
 import com.gymohrim.entity.User;
+import com.gymohrim.exception.DailyRecordNotFoundException;
 import com.gymohrim.repository.DailyRecordRepository;
-import com.gymohrim.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.util.Date;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
 
-class DailyRecordServiceTest extends IntegrationTestBase {
+class DailyRecordServiceTest {
 
-    @Autowired
+    @Mock
     private DailyRecordRepository dailyRecordRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    @InjectMocks
+    private DailyRecordService dailyRecordService;
 
     private User user;
     private Date date;
 
     @BeforeEach
     void setUp() {
-        Optional<User> optionalUser = userRepository.findByEmail("user1@example.com");
-        user = optionalUser.orElseThrow(() -> new RuntimeException("User not found"));
+        MockitoAnnotations.openMocks(this);
+        user = new User();
+        user.setId(1);
+        user.setEmail("user1@example.com");
         date = new Date();
     }
 
@@ -42,12 +46,76 @@ class DailyRecordServiceTest extends IntegrationTestBase {
                 .date(date)
                 .build();
 
-        DailyRecord savedRecord = dailyRecordRepository.save(dailyRecord);
+        when(dailyRecordRepository.save(any(DailyRecord.class))).thenReturn(dailyRecord);
 
-        assertThat(savedRecord).isNotNull();
-        assertThat(savedRecord.getId()).isNotNull();
-        assertThat(savedRecord.getUser()).isEqualTo(user);
+        dailyRecordService.saveDailyRecord(date, user);
+
+        verify(dailyRecordRepository, times(1)).save(any(DailyRecord.class));
     }
+
+    @Test
+    void existsByDateAndUser_shouldReturnTrueWhenRecordExists() {
+        when(dailyRecordRepository.findByDateAndUser(date, user)).thenReturn(Optional.of(new DailyRecord()));
+
+        boolean exists = dailyRecordService.existsByDateAndUser(date, user);
+
+        assertThat(exists).isTrue();
+        verify(dailyRecordRepository, times(1)).findByDateAndUser(date, user);
+    }
+
+    @Test
+    void existsByDateAndUser_shouldReturnFalseWhenRecordDoesNotExist() {
+        when(dailyRecordRepository.findByDateAndUser(date, user)).thenReturn(Optional.empty());
+
+        boolean exists = dailyRecordService.existsByDateAndUser(date, user);
+
+        assertThat(exists).isFalse();
+        verify(dailyRecordRepository, times(1)).findByDateAndUser(date, user);
+    }
+
+    @Test
+    void findByDateAndUser_shouldReturnRecordWhenExists() {
+        DailyRecord record = DailyRecord.builder().user(user).date(date).build();
+        when(dailyRecordRepository.findByDateAndUser(date, user)).thenReturn(Optional.of(record));
+
+        Optional<DailyRecord> foundRecord = dailyRecordService.findByDateAndUser(date, user);
+
+        assertThat(foundRecord).isPresent();
+        assertThat(foundRecord.get().getUser()).isEqualTo(user);
+    }
+
+    @Test
+    void findByDateAndUser_shouldThrowExceptionWhenUserOrDateIsNull() {
+        assertThrows(IllegalArgumentException.class, () -> dailyRecordService.findByDateAndUser(null, user));
+        assertThrows(IllegalArgumentException.class, () -> dailyRecordService.findByDateAndUser(date, null));
+    }
+
+    @Test
+    void findById_shouldReturnRecordWhenExists() {
+        DailyRecord record = new DailyRecord();
+        record.setId(1);
+        record.setUser(user);
+        record.setDate(date);
+
+        when(dailyRecordRepository.findById(1)).thenReturn(Optional.of(record));
+
+        DailyRecord foundRecord = dailyRecordService.findById(1);
+
+        assertThat(foundRecord).isNotNull();
+        assertThat(foundRecord.getUser()).isEqualTo(user);
+    }
+
+    @Test
+    void findById_shouldThrowExceptionWhenRecordNotFound() {
+        when(dailyRecordRepository.findById(9999)).thenReturn(Optional.empty());
+
+        assertThrows(DailyRecordNotFoundException.class, () -> dailyRecordService.findById(9999));
+    }
+
+
+
+
+
 
 
 
