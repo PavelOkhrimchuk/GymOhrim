@@ -1,3 +1,4 @@
+
 INSERT INTO users (email, name, password, auth_provider_type) VALUES
                                                                   ('user1@example.com', 'User One', 'password123', null),
                                                                   ('user2@example.com', 'User Two', 'password456', null);

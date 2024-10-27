@@ -31,7 +31,7 @@ public class DailyRecordServiceIntegrationTest extends IntegrationTestBase {
 
     private User createUniqueUser() {
         User user = new User();
-        user.setEmail("testuser" + System.currentTimeMillis() + "@example.com"); // Уникальный email
+        user.setEmail("testuser" + System.currentTimeMillis() + "@example.com");
         user.setName("Test User " + System.currentTimeMillis());
         user.setPassword("test123");
         return userRepository.save(user);
