@@ -4,43 +4,154 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Details</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f6f5f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1, h2 {
+            color: #FF4B2B;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .product-details {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .product-details p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .product-details strong {
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #FF4B2B;
+            border: none;
+            border-radius: 20px;
+            color: #FFFFFF;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            padding: 12px 45px;
+            text-transform: uppercase;
+            transition: transform 80ms ease-in;
+            align-self: flex-start;
+        }
+
+        button:hover {
+            background-color: #FF3A2B;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .error {
+            color: red;
+            margin-bottom: 15px;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        a {
+            color: #FF4B2B;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Product Details</h1>
+<div class="container">
+    <h1>Product Details</h1>
 
+    <div th:if="${nutritionDetails != null}" class="product-details">
+        <h2 th:text="${nutritionDetails.product.name}"></h2>
+        <p><strong>Calories:</strong> <span th:text="${nutritionDetails.calories}"></span></p>
+        <p><strong>Protein:</strong> <span th:text="${nutritionDetails.protein}"></span> g</p>
+        <p><strong>Fat:</strong> <span th:text="${nutritionDetails.fat}"></span> g</p>
+        <p><strong>Carbohydrates:</strong> <span th:text="${nutritionDetails.carbohydrates}"></span> g</p>
 
-<div th:if="${nutritionDetails != null}">
-    <h2 th:text="${nutritionDetails.product.name}"></h2>
-    <p><strong>Calories:</strong> <span th:text="${nutritionDetails.calories}"></span></p>
-    <p><strong>Protein:</strong> <span th:text="${nutritionDetails.protein}"></span> g</p>
-    <p><strong>Fat:</strong> <span th:text="${nutritionDetails.fat}"></span> g</p>
-    <p><strong>Carbohydrates:</strong> <span th:text="${nutritionDetails.carbohydrates}"></span> g</p>
+        <form th:action="@{/nutrition/update-grams}" method="post">
+            <input type="hidden" name="nutritionId" th:value="${nutritionDetails.id}" />
+            <label for="grams">Grams:</label>
+            <input type="number" id="grams" name="grams" th:value="${nutritionDetails.grams}" step="0.1" min="0" />
+            <button type="submit">Update</button>
+        </form>
+    </div>
 
+    <div th:if="${error != null}" class="error">
+        <p th:text="${error}"></p>
+    </div>
 
-    <form th:action="@{/nutrition/update-grams}" method="post">
-        <input type="hidden" name="nutritionId" th:value="${nutritionDetails.id}" />
-        <label for="grams">Grams:</label>
-        <input type="number" id="grams" name="grams" th:value="${nutritionDetails.grams}" step="0.1" min="0" />
-        <button type="submit">Update</button>
-    </form>
+    <div class="actions">
+        <a href="/calendar">Go to Calendar</a>
+        <a th:if="${selectedDate != null}" th:href="@{/daily-record(selectedDate=${selectedDate})}">Back to Daily Record</a>
+        <a th:if="${selectedDate == null}" href="/daily-record">Back to Daily Record</a>
+    </div>
 </div>
-
-
-
-
-
-<div th:if="${error != null}">
-    <p th:text="${error}"></p>
-</div>
-
-
-<a href="/calendar">Go to Calendar</a>
-
-<a th:if="${selectedDate != null}" th:href="@{/daily-record(selectedDate=${selectedDate})}">Back to Daily Record</a>
-<a th:if="${selectedDate == null}" href="/daily-record">Back to Daily Record</a>
-
-
 
 </body>
 </html>

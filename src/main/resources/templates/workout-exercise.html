@@ -5,78 +5,186 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Exercises to Workout</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f6f5f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1, h2 {
+            color: #FF4B2B;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #FF4B2B;
+            border: none;
+            border-radius: 20px;
+            color: #FFFFFF;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            padding: 12px 45px;
+            text-transform: uppercase;
+            transition: transform 80ms ease-in;
+            align-self: flex-start;
+        }
+
+        button:hover {
+            background-color: #FF3A2B;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        a {
+            color: #FF4B2B;
+            text-decoration: none;
+            margin-top: 20px;
+            display: inline-block;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            color: red;
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 <body>
-<h1>Add Exercises to Workout</h1>
+<div class="container">
+    <h1>Add Exercises to Workout</h1>
 
-<div th:if="${error}" style="color: red;">
-    <p th:text="${error}"></p>
+    <div th:if="${error}" class="error">
+        <p th:text="${error}"></p>
+    </div>
+
+    <form th:action="@{/workout-exercise(workoutId=${workoutId})}" method="post">
+        <input type="hidden" name="workoutId" th:value="${workoutId}"/>
+        <input type="hidden" name="selectedDate" th:value="${dailyRecordDate}"/>
+
+        <label for="muscleGroup">Muscle Group:</label>
+        <select id="muscleGroup" name="muscleGroup">
+            <option value="">Select Muscle Group</option>
+            <option th:each="group : ${muscleGroups}" th:value="${group}" th:text="${group}"></option>
+        </select>
+
+        <label for="exercise">Exercise:</label>
+        <select name="exercise.id" id="exercise" required>
+            <option value="">Select Exercise</option>
+        </select>
+
+        <label for="sets">Sets:</label>
+        <input type="number" name="sets" id="sets" min="1" th:value="${workoutExercise.sets}" required/>
+
+        <label for="reps">Reps:</label>
+        <input type="number" name="reps" id="reps" min="1" th:value="${workoutExercise.reps}" required/>
+
+        <label for="weight">Weight (kg):</label>
+        <input type="number" name="weight" id="weight" step="0.1" min="0" th:value="${workoutExercise.weight}" required/>
+
+        <button type="submit">Add Exercise</button>
+    </form>
+
+    <h2>Added Exercises</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Exercise</th>
+            <th>Sets</th>
+            <th>Reps</th>
+            <th>Weight (kg)</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="workoutExercise: ${addedExercises}">
+            <td>
+                <a th:href="@{/workout-exercise/exercise/{id}(id=${workoutExercise.exercise.id}, workoutId=${workoutId})}" th:text="${workoutExercise.exercise.name}"></a>
+            </td>
+            <td th:text="${workoutExercise.sets}"></td>
+            <td th:text="${workoutExercise.reps}"></td>
+            <td th:text="${workoutExercise.weight}"></td>
+            <td>
+                <form th:action="@{/workout-exercise/delete}" method="post">
+                    <input type="hidden" name="id" th:value="${workoutExercise.id}"/>
+                    <input type="hidden" name="workoutId" th:value="${workoutId}"/>
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a href="/calendar">Go to Calendar</a>
 </div>
 
-<form th:action="@{/workout-exercise(workoutId=${workoutId})}" method="post">
-    <input type="hidden" name="workoutId" th:value="${workoutId}"/>
-    <input type="hidden" name="selectedDate" th:value="${dailyRecordDate}"/>
-
-    <label for="muscleGroup">Muscle Group:</label>
-    <select id="muscleGroup" name="muscleGroup">
-        <option value="">Select Muscle Group</option>
-        <option th:each="group : ${muscleGroups}" th:value="${group}" th:text="${group}"></option>
-    </select>
-    <br/><br/>
-
-
-    <label for="exercise">Exercise:</label>
-    <select name="exercise.id" id="exercise" required>
-        <option value="">Select Exercise</option>
-
-    </select>
-    <br/><br/>
-
-    <label for="sets">Sets:</label>
-    <input type="number" name="sets" id="sets" min="1" th:value="${workoutExercise.sets}" required/><br/><br/>
-
-    <label for="reps">Reps:</label>
-    <input type="number" name="reps" id="reps" min="1" th:value="${workoutExercise.reps}" required/><br/><br/>
-
-    <label for="weight">Weight (kg):</label>
-    <input type="number" name="weight" id="weight" step="0.1" min="0" th:value="${workoutExercise.weight}" required/><br/><br/>
-
-    <button type="submit">Add Exercise</button>
-</form>
-
-<h2>Added Exercises</h2>
-<table>
-    <thead>
-    <tr>
-        <th>Exercise</th>
-        <th>Sets</th>
-        <th>Reps</th>
-        <th>Weight (kg)</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="workoutExercise: ${addedExercises}">
-        <td>
-            <a th:href="@{/workout-exercise/exercise/{id}(id=${workoutExercise.exercise.id}, workoutId=${workoutId})}" th:text="${workoutExercise.exercise.name}"></a>
-        </td>
-        <td th:text="${workoutExercise.sets}"></td>
-        <td th:text="${workoutExercise.reps}"></td>
-        <td th:text="${workoutExercise.weight}"></td>
-        <td>
-            <form th:action="@{/workout-exercise/delete}" method="post">
-                <input type="hidden" name="id" th:value="${workoutExercise.id}"/>
-                <input type="hidden" name="workoutId" th:value="${workoutId}"/>
-                <button type="submit">Delete</button>
-            </form>
-        </td>
-
-    </tr>
-    </tbody>
-</table>
-
 <script>
-
     $(document).ready(function () {
         $('#muscleGroup').change(function () {
             var selectedGroup = $(this).val();
@@ -96,10 +204,5 @@
         });
     });
 </script>
-
-
-<a href="/calendar">Go to Calendar</a>
-
 </body>
 </html>
-
