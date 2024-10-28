@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
 CREATE TABLE users (
                        id SERIAL PRIMARY KEY,
                        email VARCHAR(255) UNIQUE NOT NULL,
@@ -38,7 +40,9 @@ CREATE TABLE workout (
 CREATE TABLE exercise (
                           id SERIAL PRIMARY KEY,
                           name VARCHAR(255) NOT NULL,
-                          description TEXT
+                          description TEXT,
+                            muscle_group VARCHAR(50),
+                          media_url VARCHAR(1000)
 );
 
 CREATE TABLE nutrition (
@@ -60,3 +64,4 @@ CREATE TABLE workout_exercise (
                                   reps INT,
                                   weight NUMERIC(10, 2)
 );
+
