@@ -30,9 +30,9 @@
             flex-direction: column;
             padding: 40px 30px;
             border-radius: 10px;
-            box-shadow: 0 14px 28px rgba(0,0,0,0.25),
-            0 10px 10px rgba(0,0,0,0.22);
-            width: 400px;
+            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+            width: 100%;
+            max-width: 400px;
         }
 
         h1 {
@@ -61,8 +61,6 @@
 
         label {
             color: #333;
-            text-align: left;
-            width: 100%;
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
@@ -89,7 +87,7 @@
             background-color: transparent;
         }
 
-        input[type="submit"], button {
+        button, .buttons button {
             border-radius: 20px;
             border: 1px solid #FF4B2B;
             background-color: #FF4B2B;
@@ -101,15 +99,15 @@
             text-transform: uppercase;
             transition: transform 80ms ease-in;
             cursor: pointer;
-            margin-top: 20px;
             width: 100%;
+            margin-top: 20px;
         }
 
-        input[type="submit"]:hover, button:hover {
+        button:hover, .buttons button:hover {
             background-color: #FF3A2B;
         }
 
-        input[type="submit"]:active, button:active {
+        button:active, .buttons button:active {
             transform: scale(0.95);
         }
 
@@ -122,6 +120,20 @@
 
         .buttons form {
             width: 48%;
+        }
+
+        @media (max-width: 480px) {
+            .profile-container {
+                padding: 20px;
+            }
+            .profile-picture {
+                width: 100px;
+                height: 100px;
+            }
+            button, .buttons button {
+                padding: 10px 30px;
+                font-size: 12px;
+            }
         }
     </style>
 </head>
