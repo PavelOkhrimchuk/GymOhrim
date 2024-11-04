@@ -4,11 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Choose Date</title>
-
-
-
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
-
 
     <style>
         @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
@@ -47,6 +43,7 @@
             font-weight: bold;
             margin: 0 0 20px 0;
             color: #FF4B2B;
+            text-align: center;
         }
 
         #calendar {
@@ -110,7 +107,6 @@
             text-decoration: underline;
         }
 
-
         .fc-theme-standard td, .fc-theme-standard th {
             border-color: #ddd;
         }
@@ -130,6 +126,40 @@
 
         .fc-daygrid-day-number {
             color: #333;
+        }
+
+
+        @media (max-width: 600px) {
+            .calendar-container {
+                padding: 20px 15px;
+                width: 90%;
+            }
+
+            #calendar {
+                max-width: 100%;
+            }
+
+            #selectedDateDisplay {
+                width: 100%;
+                font-size: 1em;
+            }
+
+            button {
+                width: 100%;
+                padding: 12px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            input[type="text"] {
+                font-size: 1em;
+            }
+
+            a {
+                font-size: 1em;
+            }
         }
     </style>
 </head>
