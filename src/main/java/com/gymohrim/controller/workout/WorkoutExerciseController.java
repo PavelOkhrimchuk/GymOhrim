@@ -56,12 +56,12 @@ public class WorkoutExerciseController {
 
 
     @PostMapping
-    public String changeWorkoutExercise(@ModelAttribute WorkoutExercise workoutExercise,
+    public String addWorkoutExercise(@ModelAttribute WorkoutExercise workoutExercise,
                                         @RequestParam("workoutId") Integer workoutId,
                                         @RequestParam("selectedDate") String selectedDate) {
         Workout workout = workoutService.findById(workoutId);
         workoutExercise.setWorkout(workout);
-        workoutExerciseService.saveOrUpdateWorkoutExercise(workoutExercise);
+        workoutExerciseService.saveExercise(workoutExercise);
         return "redirect:/workout-exercise?workoutId=" + workout.getId() + "&selectedDate=" + selectedDate;
     }
 
