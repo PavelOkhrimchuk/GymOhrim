@@ -36,11 +36,12 @@
         h1 {
             color: #FF4B2B;
             margin-bottom: 20px;
+            font-size: 2rem;
         }
 
         p {
             color: #333;
-            font-size: 16px;
+            font-size: 1rem;
             line-height: 1.6;
             margin-bottom: 30px;
         }
@@ -51,17 +52,38 @@
             border-radius: 20px;
             color: #FFFFFF;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 0.875rem;
             font-weight: bold;
             letter-spacing: 1px;
             padding: 12px 45px;
             text-decoration: none;
             text-transform: uppercase;
             transition: background-color 0.3s ease;
+            display: inline-block;
         }
 
         a:hover {
             background-color: #FF3A2B;
+        }
+
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            p {
+                font-size: 0.875rem;
+                margin-bottom: 20px;
+            }
+
+            a {
+                padding: 10px 30px;
+            }
         }
     </style>
 </head>
