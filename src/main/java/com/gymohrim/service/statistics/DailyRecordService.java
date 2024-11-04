@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -51,6 +52,13 @@ public class DailyRecordService {
                     log.error("Daily record with ID {} not found", id);
                     return new DailyRecordNotFoundException("Record with ID " + id + " not found");
                 });
+    }
+
+
+    public List<Date> findDailyRecordByUser(User user ) {
+        return dailyRecordRepository.findByUser(user).stream()
+                .map(DailyRecord::getDate)
+                .toList();
     }
 
 

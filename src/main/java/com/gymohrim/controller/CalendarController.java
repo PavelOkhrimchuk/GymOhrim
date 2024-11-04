@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,9 +28,13 @@ public class CalendarController {
     private final DailyRecordService dailyRecordService;
 
     @GetMapping
-    public String showCalendar() {
+    public String showCalendar(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        User user = userProfileService.findByEmail(userDetails.getUsername());
+        List<Date> existingRecords = dailyRecordService.findDailyRecordByUser(user);
+        model.addAttribute("existingRecords", existingRecords);
         return "calendar-form";
     }
+
 
 
     @PostMapping("/submit")
