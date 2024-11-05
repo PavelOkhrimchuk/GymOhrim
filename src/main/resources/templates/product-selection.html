@@ -26,7 +26,7 @@
         .container {
             background-color: #FFFFFF;
             border-radius: 10px;
-            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
             padding: 40px;
             max-width: 600px;
             width: 100%;
@@ -105,6 +105,17 @@
 
         .back-button:hover {
             background-color: #5a6268;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            button {
+                padding: 12px 20px;
+                width: 100%;
+            }
         }
     </style>
 </head>

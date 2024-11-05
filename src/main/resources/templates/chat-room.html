@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Room</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+<h2>Welcome to the Chat Room</h2>
+<div id="chat">
+    <div id="messages"></div>
+    <input type="text" id="senderInput" placeholder="Enter your name..."/>
+    <input type="text" id="messageInput" placeholder="Type a message..."/>
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+    var stompClient = null;
+
+    function connect() {
+        var socket = new SockJS('/chat');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/topic/public', function (chatMessage) {
+                showMessage(JSON.parse(chatMessage.body));
+            });
+        });
+    }
+
+    function sendMessage() {
+        var messageContent = document.getElementById("messageInput").value;
+        var senderName = document.getElementById("senderInput").value || "Anonymous";
+
+        if (messageContent && stompClient) {
+            stompClient.send("/app/chat.sendMessage", {}, JSON.stringify({
+                sender: senderName,
+                content: messageContent
+            }));
+            document.getElementById("messageInput").value = '';
+        }
+    }
+
+    function showMessage(message) {
+        var messageElement = document.createElement('div');
+        messageElement.appendChild(document.createTextNode(message.sender + ": " + message.content));
+        document.getElementById("messages").appendChild(messageElement);
+    }
+
+    connect();
+</script>
+</body>
+</html>

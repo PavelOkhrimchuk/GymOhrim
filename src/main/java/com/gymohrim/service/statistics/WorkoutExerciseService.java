@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,26 +21,9 @@ public class WorkoutExerciseService {
 
 
     @Transactional
-    public void saveOrUpdateWorkoutExercise(WorkoutExercise workoutExercise) {
-
-        Optional<WorkoutExercise> existingWorkoutWorkoutExercise = workoutExerciseRepository.findByWorkoutAndExercise(workoutExercise.getWorkout(), workoutExercise.getExercise());
-
-        if (existingWorkoutWorkoutExercise.isPresent()) {
-            WorkoutExercise existingWorkout = existingWorkoutWorkoutExercise.get();
-
-            existingWorkout.setExercise(workoutExercise.getExercise());
-            existingWorkout.setReps(workoutExercise.getReps());
-            existingWorkout.setSets(workoutExercise.getSets());
-            existingWorkout.setWeight(workoutExercise.getWeight());
-            workoutExerciseRepository.save(existingWorkout);
-
-            log.info("Updated WorkoutExercise ID: {}", existingWorkout.getId());
-        } else {
+    public void saveExercise(WorkoutExercise workoutExercise) {
 
             workoutExerciseRepository.save(workoutExercise);
-            log.info("Saved new WorkoutExercise ID: {}", workoutExercise.getId());
-        }
-
 
     }
 
