@@ -19,6 +19,19 @@ public class WorkoutController {
     private final DailyRecordService dailyRecordService;
     private final WorkoutService workoutService;
 
+
+    @PostMapping("/start")
+    public String startWorkout(@RequestParam("dailyRecordId") Integer dailyRecordId) {
+        Workout workout = workoutService.startWorkout(dailyRecordId);
+        return "redirect:/daily-record?selectedDate=" + workout.getDailyRecord().getDate();
+    }
+
+    @PostMapping("/end")
+    public String endWorkout(@RequestParam("workoutId") Integer workoutId) {
+        Workout workout = workoutService.endWorkout(workoutId);
+        return "redirect:/daily-record?selectedDate=" + workout.getDailyRecord().getDate();
+    }
+
     @PostMapping("/save")
     public String saveWorkout(@ModelAttribute Workout workout, @RequestParam("dailyRecordId") Integer dailyRecordId) {
         DailyRecord dailyRecord = dailyRecordService.findById(dailyRecordId);
@@ -26,4 +39,9 @@ public class WorkoutController {
         workoutService.saveOrUpdateWorkout(workout);
         return "redirect:/daily-record?selectedDate=" + dailyRecord.getDate();
     }
+
+
+
+
+
 }
