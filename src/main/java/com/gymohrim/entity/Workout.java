@@ -4,6 +4,8 @@ package com.gymohrim.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Builder
 @AllArgsConstructor
@@ -28,5 +30,10 @@ public class Workout {
     private String notes;
 
 
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+
+
+    private Long duration;
 
 }
