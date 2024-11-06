@@ -7,9 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,8 +32,7 @@ public class ChatController {
     }
 
     @GetMapping("/chat-room")
-    public String chatRoom(@RequestParam("userId") Integer userId, Model model) {
-        model.addAttribute("userId", userId);
+    public String chatRoom() {
         return "chat-room";
     }
 }
