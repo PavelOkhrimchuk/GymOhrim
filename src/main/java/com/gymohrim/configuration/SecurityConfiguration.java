@@ -39,7 +39,7 @@ public class SecurityConfiguration {
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/register", "/login").permitAll()
+                        .requestMatchers("/", "/register", "/login", "/actuator/prometheus").permitAll()  // Добавляем /actuator/prometheus
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
