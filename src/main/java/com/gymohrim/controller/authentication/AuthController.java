@@ -1,6 +1,8 @@
 package com.gymohrim.controller.authentication;
 
+import com.gymohrim.dto.user.UserRegistrationDTO;
 import com.gymohrim.entity.User;
+import com.gymohrim.mapper.UserMapper;
 import com.gymohrim.repository.UserRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ public class AuthController {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
     @GetMapping("/")
     public String redirectToRegister() {
@@ -36,17 +39,19 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute @Valid User user, BindingResult bindingResult) {
-        log.info("Attempting to register user: {}", user.getName());
-        validateUser(user, bindingResult);
+    public String registerUser(@ModelAttribute @Valid UserRegistrationDTO userDto, BindingResult bindingResult) {
+        log.info("Attempting to register user: {}", userDto.getName());
+        validateUser(userDto, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            log.warn("Registration failed due to validation errors for user: {}", user.getName());
+            log.warn("Registration failed due to validation errors for user: {}", userDto.getName());
             return "register";
         }
 
+        User user = userMapper.toEntity(userDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+
         log.info("User registered successfully: {}", user.getName());
         return "redirect:/login";
     }
@@ -61,14 +66,14 @@ public class AuthController {
         return "login";
     }
 
-    private void validateUser(User user, BindingResult bindingResult) {
-        if (userRepository.existsByName(user.getName())) {
+    private void validateUser(UserRegistrationDTO userDto, BindingResult bindingResult) {
+        if (userRepository.existsByName(userDto.getName())) {
             bindingResult.rejectValue("name", "error.user", "User with this name already exists.");
-            log.warn("User with name '{}' already exists.", user.getName());
+            log.warn("User with name '{}' already exists.", userDto.getName());
         }
-        if (userRepository.existsByEmail(user.getEmail())) {
+        if (userRepository.existsByEmail(userDto.getEmail())) {
             bindingResult.rejectValue("email", "error.user", "User with this email already exists.");
-            log.warn("User with email '{}' already exists.", user.getEmail());
+            log.warn("User with email '{}' already exists.", userDto.getEmail());
         }
     }
 

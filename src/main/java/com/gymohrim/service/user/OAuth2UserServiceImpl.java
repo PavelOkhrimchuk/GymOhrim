@@ -1,8 +1,10 @@
 package com.gymohrim.service.user;
 
 import com.gymohrim.configuration.SecurityConfiguration;
+import com.gymohrim.dto.user.UserRegistrationDTO;
 import com.gymohrim.entity.User;
 import com.gymohrim.entity.account.AuthProviderType;
+import com.gymohrim.mapper.UserMapper;
 import com.gymohrim.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
 
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
 
     @Override
@@ -37,17 +40,19 @@ public class OAuth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
         log.info("OAuth2 User info: Email = {}, Name = {}", email, name);
 
         User user = userRepository.findByEmail(email).orElseGet(() -> {
-
             log.info("User not found, creating new user with email: {}", email);
 
-            User newUser = new User();
-            newUser.setEmail(email);
-            newUser.setName(name);
-            String randomPassword = UUID.randomUUID().toString();
-            newUser.setPassword(SecurityConfiguration.encodePassword(randomPassword));
-            newUser.setAuthProviderType(AuthProviderType.GOOGLE);
-            User savedUser = userRepository.save(newUser);
+            UserRegistrationDTO dto = UserRegistrationDTO.builder()
+                    .email(email)
+                    .name(name)
+                    .password(UUID.randomUUID().toString())
+                    .build();
 
+            User newUser = userMapper.toEntity(dto);
+            newUser.setPassword(SecurityConfiguration.encodePassword(newUser.getPassword()));
+            newUser.setAuthProviderType(AuthProviderType.GOOGLE);
+
+            User savedUser = userRepository.save(newUser);
             log.info("New user created: {}", savedUser.getEmail());
 
             return savedUser;
