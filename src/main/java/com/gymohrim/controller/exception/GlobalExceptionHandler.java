@@ -4,6 +4,7 @@ import com.gymohrim.exception.api.OpenFoodFactsException;
 import com.gymohrim.exception.file.BucketCreationException;
 import com.gymohrim.exception.file.FileUploadException;
 import com.gymohrim.exception.statistics.DailyRecordNotFoundException;
+import com.gymohrim.exception.statistics.ExerciseNotFoundException;
 import com.gymohrim.exception.statistics.WorkoutNotFoundException;
 import com.gymohrim.exception.user.InvalidDateOrUserException;
 import com.gymohrim.exception.user.UserNotFoundException;
@@ -114,6 +115,13 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleInvalidDateOrUserException(InvalidDateOrUserException e, Model model) {
         model.addAttribute("error", "Date and user must not be null. Please provide valid data.");
+        return "error";
+    }
+
+    @ExceptionHandler(ExerciseNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleExerciseNotFoundException(ExerciseNotFoundException e, Model model) {
+        model.addAttribute("error", "The exercise with the provided ID was not found.");
         return "error";
     }
 
