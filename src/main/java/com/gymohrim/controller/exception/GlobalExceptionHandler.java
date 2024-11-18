@@ -3,9 +3,7 @@ package com.gymohrim.controller.exception;
 import com.gymohrim.exception.api.OpenFoodFactsException;
 import com.gymohrim.exception.file.BucketCreationException;
 import com.gymohrim.exception.file.FileUploadException;
-import com.gymohrim.exception.statistics.DailyRecordNotFoundException;
-import com.gymohrim.exception.statistics.ExerciseNotFoundException;
-import com.gymohrim.exception.statistics.WorkoutNotFoundException;
+import com.gymohrim.exception.statistics.*;
 import com.gymohrim.exception.user.InvalidDateOrUserException;
 import com.gymohrim.exception.user.UserNotFoundException;
 import com.gymohrim.exception.user.UserProfileNotFoundException;
@@ -122,6 +120,21 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleExerciseNotFoundException(ExerciseNotFoundException e, Model model) {
         model.addAttribute("error", "The exercise with the provided ID was not found.");
+        return "error";
+    }
+
+
+    @ExceptionHandler(WorkoutExerciseNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleWorkoutExerciseNotFoundException(WorkoutExerciseNotFoundException e, Model model) {
+        model.addAttribute("error", "No exercises found for the given workout ID.");
+        return "error";
+    }
+
+    @ExceptionHandler(WorkoutExerciseDeleteException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleWorkoutExerciseDeleteException(WorkoutExerciseDeleteException e, Model model) {
+        model.addAttribute("error", "Unable to delete exercise: " + e.getMessage());
         return "error";
     }
 
