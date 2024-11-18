@@ -3,6 +3,8 @@ package com.gymohrim.controller.exception;
 import com.gymohrim.exception.api.OpenFoodFactsException;
 import com.gymohrim.exception.file.BucketCreationException;
 import com.gymohrim.exception.file.FileUploadException;
+import com.gymohrim.exception.statistics.DailyRecordNotFoundException;
+import com.gymohrim.exception.statistics.WorkoutNotFoundException;
 import com.gymohrim.exception.user.UserNotFoundException;
 import com.gymohrim.exception.user.UserProfileNotFoundException;
 import com.gymohrim.exception.user.UserProfileSaveException;
@@ -89,6 +91,20 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleOpenFoodFactsException(OpenFoodFactsException e, Model model) {
         model.addAttribute("error", "Failed to fetch product information. Please try again later.");
+        return "error";
+    }
+
+    @ExceptionHandler(WorkoutNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleWorkoutNotFoundException(WorkoutNotFoundException e, Model model) {
+        model.addAttribute("error", "Workout not found. Please check the workout ID and try again.");
+        return "error";
+    }
+
+    @ExceptionHandler(DailyRecordNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleDailyRecordNotFoundException(DailyRecordNotFoundException e, Model model) {
+        model.addAttribute("error", "Daily record not found. Please check the record ID and try again.");
         return "error";
     }
 

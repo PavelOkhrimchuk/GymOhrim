@@ -3,6 +3,8 @@ package com.gymohrim.service.statistics;
 
 import com.gymohrim.entity.DailyRecord;
 import com.gymohrim.entity.Workout;
+import com.gymohrim.exception.statistics.DailyRecordNotFoundException;
+import com.gymohrim.exception.statistics.WorkoutNotFoundException;
 import com.gymohrim.repository.DailyRecordRepository;
 import com.gymohrim.repository.WorkoutRepository;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +50,7 @@ public class WorkoutService {
 
     public Workout startWorkout(Integer dailyRecordId) {
         DailyRecord dailyRecord = dailyRecordRepository.findById(dailyRecordId)
-                .orElseThrow(() -> new IllegalArgumentException("DailyRecord with id " + dailyRecordId + " not found"));
+                .orElseThrow(() -> new DailyRecordNotFoundException("DailyRecord with id " + dailyRecordId + " not found"));
 
         Optional<Workout> existingWorkout = workoutRepository.findByDailyRecord(dailyRecord);
 
@@ -70,7 +72,7 @@ public class WorkoutService {
 
     public Workout endWorkout(Integer workoutId) {
         Workout workout = workoutRepository.findById(workoutId)
-                .orElseThrow(() -> new RuntimeException("Workout not found"));
+                .orElseThrow(() -> new WorkoutNotFoundException("Workout with id " + workoutId + " not found"));
 
         workout.setEndTime(LocalDateTime.now());
         workout.setDuration(Duration.between(workout.getStartTime(), workout.getEndTime()).getSeconds());
@@ -80,11 +82,10 @@ public class WorkoutService {
         return workout;
     }
 
-
     public Workout findById(Integer id) {
         log.info("Finding Workout with ID: {}", id);
         return workoutRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Workout with id " + id + " not found"));
+                .orElseThrow(() -> new WorkoutNotFoundException("Workout with id " + id + " not found"));
     }
 
 
