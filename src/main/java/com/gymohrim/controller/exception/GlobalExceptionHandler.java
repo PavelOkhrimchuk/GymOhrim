@@ -139,6 +139,29 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(ProductNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleProductNotFoundException(ProductNotFoundException e, Model model) {
+        model.addAttribute("error", "The product was not found.");
+        return "error";
+    }
+
+    @ExceptionHandler(NutritionNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleNutritionNotFoundException(NutritionNotFoundException e, Model model) {
+        model.addAttribute("error", "The nutrition record was not found.");
+        return "error";
+    }
+
+    @ExceptionHandler(InvalidNutritionDataException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleInvalidNutritionDataException(InvalidNutritionDataException e, Model model) {
+        model.addAttribute("error", "Invalid nutrition data provided.");
+        return "error";
+    }
+
+
+
 
 
 }
