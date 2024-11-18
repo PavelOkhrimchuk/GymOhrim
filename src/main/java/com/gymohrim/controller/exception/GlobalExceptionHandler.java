@@ -2,6 +2,9 @@ package com.gymohrim.controller.exception;
 
 import com.gymohrim.exception.file.BucketCreationException;
 import com.gymohrim.exception.file.FileUploadException;
+import com.gymohrim.exception.user.UserNotFoundException;
+import com.gymohrim.exception.user.UserProfileNotFoundException;
+import com.gymohrim.exception.user.UserProfileSaveException;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -57,6 +60,29 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleBucketCreationException(BucketCreationException e, Model model) {
         model.addAttribute("error", "Failed to initialize the file storage. Please contact support.");
+        return "error";
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleUserNotFoundException(UserNotFoundException e, Model model) {
+        model.addAttribute("error", e.getMessage());
+        return "error";
+    }
+
+
+    @ExceptionHandler(UserProfileNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String handleUserProfileNotFoundException(UserProfileNotFoundException e, Model model) {
+        model.addAttribute("error", e.getMessage());
+        return "error";
+    }
+
+
+    @ExceptionHandler(UserProfileSaveException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String handleUserProfileSaveException(UserProfileSaveException e, Model model) {
+        model.addAttribute("error", e.getMessage());
         return "error";
     }
 
