@@ -1,5 +1,7 @@
 package com.gymohrim.controller.exception;
 
+import com.gymohrim.exception.file.BucketCreationException;
+import com.gymohrim.exception.file.FileUploadException;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -40,6 +42,21 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleMissingException(MissingServletRequestParameterException e, Model model) {
         model.addAttribute("error", "Please create a workout first.");
+        return "error";
+    }
+
+
+    @ExceptionHandler(FileUploadException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String handleFileUploadException(FileUploadException e, Model model) {
+        model.addAttribute("error", "Failed to upload the file. Please try again later.");
+        return "error";
+    }
+
+    @ExceptionHandler(BucketCreationException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String handleBucketCreationException(BucketCreationException e, Model model) {
+        model.addAttribute("error", "Failed to initialize the file storage. Please contact support.");
         return "error";
     }
 
