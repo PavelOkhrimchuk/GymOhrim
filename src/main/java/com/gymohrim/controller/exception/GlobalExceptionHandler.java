@@ -1,5 +1,6 @@
 package com.gymohrim.controller.exception;
 
+import com.gymohrim.exception.api.OpenFoodFactsException;
 import com.gymohrim.exception.file.BucketCreationException;
 import com.gymohrim.exception.file.FileUploadException;
 import com.gymohrim.exception.user.UserNotFoundException;
@@ -66,24 +67,31 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleUserNotFoundException(UserNotFoundException e, Model model) {
-        model.addAttribute("error", e.getMessage());
+        model.addAttribute("error", "User not found. Please check the email address and try again.");
         return "error";
     }
-
 
     @ExceptionHandler(UserProfileNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleUserProfileNotFoundException(UserProfileNotFoundException e, Model model) {
-        model.addAttribute("error", e.getMessage());
+        model.addAttribute("error", "User profile not found. Please make sure the user profile exists.");
         return "error";
     }
-
 
     @ExceptionHandler(UserProfileSaveException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String handleUserProfileSaveException(UserProfileSaveException e, Model model) {
-        model.addAttribute("error", e.getMessage());
+        model.addAttribute("error", "Failed to save or update user profile. Please try again later.");
         return "error";
     }
+
+    @ExceptionHandler(OpenFoodFactsException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String handleOpenFoodFactsException(OpenFoodFactsException e, Model model) {
+        model.addAttribute("error", "Failed to fetch product information. Please try again later.");
+        return "error";
+    }
+
+
 
 }
