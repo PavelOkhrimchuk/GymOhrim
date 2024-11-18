@@ -5,6 +5,7 @@ import com.gymohrim.exception.file.BucketCreationException;
 import com.gymohrim.exception.file.FileUploadException;
 import com.gymohrim.exception.statistics.DailyRecordNotFoundException;
 import com.gymohrim.exception.statistics.WorkoutNotFoundException;
+import com.gymohrim.exception.user.InvalidDateOrUserException;
 import com.gymohrim.exception.user.UserNotFoundException;
 import com.gymohrim.exception.user.UserProfileNotFoundException;
 import com.gymohrim.exception.user.UserProfileSaveException;
@@ -107,6 +108,15 @@ public class GlobalExceptionHandler {
         model.addAttribute("error", "Daily record not found. Please check the record ID and try again.");
         return "error";
     }
+
+
+    @ExceptionHandler(InvalidDateOrUserException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleInvalidDateOrUserException(InvalidDateOrUserException e, Model model) {
+        model.addAttribute("error", "Date and user must not be null. Please provide valid data.");
+        return "error";
+    }
+
 
 
 
