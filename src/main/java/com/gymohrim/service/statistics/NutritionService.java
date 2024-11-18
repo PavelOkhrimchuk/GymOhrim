@@ -5,6 +5,9 @@ import com.gymohrim.dto.openfoodfacts.api.ProductDetailsDto;
 import com.gymohrim.entity.DailyRecord;
 import com.gymohrim.entity.Nutrition;
 import com.gymohrim.entity.Product;
+import com.gymohrim.exception.statistics.InvalidNutritionDataException;
+import com.gymohrim.exception.statistics.NutritionNotFoundException;
+import com.gymohrim.exception.statistics.ProductNotFoundException;
 import com.gymohrim.repository.NutritionRepository;
 import com.gymohrim.repository.ProductRepository;
 import com.gymohrim.util.RoundingUtil;
@@ -35,9 +38,12 @@ public class NutritionService {
     public void addNutrition(DailyRecord dailyRecord, String barcode, ProductDetailsDto productDetailsDto, Double grams) {
         Product product = productRepository.findByBarcode(barcode);
 
+        if (product == null) {
+            throw new ProductNotFoundException("Product with barcode " + barcode + " not found.");
+        }
+
         Nutrition nutrition = new Nutrition();
         nutrition.setDailyRecord(dailyRecord);
-
         nutrition.setCalories((int) ((productDetailsDto.getNutrimentsDto().getEnergyKcal() / 100) * grams));
         nutrition.setProtein(RoundingUtil.roundToOneDecimal(productDetailsDto.getNutrimentsDto().getProteins() / 100 * grams));
         nutrition.setFat(RoundingUtil.roundToOneDecimal(productDetailsDto.getNutrimentsDto().getFat() / 100 * grams));
@@ -46,11 +52,10 @@ public class NutritionService {
         nutrition.setGrams(grams);
 
         dailyRecord.getNutritionList().add(nutrition);
-
-
         nutritionRepository.save(nutrition);
         log.info("Added nutrition for product: {}, grams: {}", product.getName(), grams);
     }
+
 
     public List<Product> searchProducts(String query) {
         if (query == null || query.isEmpty()) {
@@ -64,6 +69,9 @@ public class NutritionService {
     @Transactional
     public void deleteNutrition(Integer id) {
         log.info("Deleting nutrition record with ID: {}", id);
+        if (!nutritionRepository.existsById(id)) {
+            throw new NutritionNotFoundException("Nutrition record with ID " + id + " not found.");
+        }
         nutritionRepository.deleteById(id);
     }
 
@@ -96,11 +104,11 @@ public class NutritionService {
                 log.info("Updated nutrition record ID: {}, new grams: {}", nutritionId, newGrams);
             } else {
                 log.error("Original grams cannot be zero or negative for nutrition ID: {}", nutritionId);
-                throw new IllegalArgumentException("Original grams cannot be zero or negative.");
+                throw new InvalidNutritionDataException("Original grams cannot be zero or negative.");
             }
         } else {
             log.error("Nutrition record not found for ID: {}", nutritionId);
-            throw new IllegalArgumentException("Nutrition record not found.");
+            throw new NutritionNotFoundException("Nutrition record not found.");
         }
     }
 

@@ -3,7 +3,8 @@ package com.gymohrim.service.statistics;
 
 import com.gymohrim.entity.DailyRecord;
 import com.gymohrim.entity.User;
-import com.gymohrim.exception.DailyRecordNotFoundException;
+import com.gymohrim.exception.statistics.DailyRecordNotFoundException;
+import com.gymohrim.exception.user.InvalidDateOrUserException;
 import com.gymohrim.repository.DailyRecordRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +41,7 @@ public class DailyRecordService {
     public Optional<DailyRecord> findByDateAndUser(Date date, User user) {
         if (date == null || user == null) {
             log.error("Date or user is null when trying to find daily record");
-            throw new IllegalArgumentException("Date and user must not be null.");
+            throw new InvalidDateOrUserException("Date and user must not be null.");
         }
 
         return dailyRecordRepository.findByDateAndUser(date, user);

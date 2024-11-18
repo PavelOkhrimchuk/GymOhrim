@@ -1,5 +1,7 @@
 package com.gymohrim.service;
 
+import com.gymohrim.exception.file.BucketCreationException;
+import com.gymohrim.exception.file.FileUploadException;
 import io.minio.*;
 import io.minio.http.Method;
 import jakarta.annotation.PostConstruct;
@@ -40,10 +42,11 @@ public class FileStorageService {
             }
         } catch (Exception e) {
             log.error("Error occurred while creating bucket '{}': {}", bucketName, e.getMessage(), e);
+            throw new BucketCreationException("Failed to create or check bucket: " + bucketName, e);
         }
     }
 
-    public String uploadFile(MultipartFile file, String fileName) throws Exception {
+    public String uploadFile(MultipartFile file, String fileName) {
         try (InputStream inputStream = file.getInputStream()) {
             log.info("Uploading file '{}' to bucket '{}'", fileName, bucketName);
             minioClient.putObject(
@@ -68,10 +71,9 @@ public class FileStorageService {
             return fileUrl;
         } catch (Exception e) {
             log.error("Error uploading file '{}' to bucket '{}': {}", fileName, bucketName, e.getMessage(), e);
-            throw e;
+            throw new FileUploadException("Failed to upload file: " + fileName, e);
         }
     }
-
 
 
 }

@@ -2,6 +2,7 @@ package com.gymohrim.service.statistics;
 
 
 import com.gymohrim.entity.Exercise;
+import com.gymohrim.exception.statistics.ExerciseNotFoundException;
 import com.gymohrim.repository.ExerciseRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +37,6 @@ public class ExerciseService {
     public Exercise findById(Integer id) {
         log.debug("Fetching exercise with ID: {}", id);
         return exerciseRepository.findById(id)
-                .orElse(null);
+                .orElseThrow(() -> new ExerciseNotFoundException("Exercise with ID " + id + " not found"));
     }
 }
