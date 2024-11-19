@@ -74,6 +74,12 @@ public class WorkoutService {
         Workout workout = workoutRepository.findById(workoutId)
                 .orElseThrow(() -> new WorkoutNotFoundException("Workout with id " + workoutId + " not found"));
 
+
+        if (workout.getStartTime() == null) {
+            log.info("Workout ID: {} wasn't started. Starting workout automatically.", workout.getId());
+            workout.setStartTime(LocalDateTime.now());
+        }
+
         workout.setEndTime(LocalDateTime.now());
         workout.setDuration(Duration.between(workout.getStartTime(), workout.getEndTime()).getSeconds());
         workoutRepository.save(workout);
@@ -81,6 +87,7 @@ public class WorkoutService {
         log.info("Ended Workout ID: {} with Duration: {} seconds", workout.getId(), workout.getDuration());
         return workout;
     }
+
 
     public Workout findById(Integer id) {
         log.info("Finding Workout with ID: {}", id);

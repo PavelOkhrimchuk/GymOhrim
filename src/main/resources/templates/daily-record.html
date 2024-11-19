@@ -192,6 +192,7 @@
 
     <form th:action="@{/workout/end}" method="post">
         <input type="hidden" name="workoutId" th:value="${workout.id}" />
+        <input type="hidden" name="dailyRecordId" th:value="${dailyRecord.id}" />
         <button type="submit">End Workout</button>
     </form>
 
