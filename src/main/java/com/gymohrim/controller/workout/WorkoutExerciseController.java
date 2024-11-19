@@ -55,13 +55,15 @@ public class WorkoutExerciseController {
     }
 
 
-    @PostMapping
+    @PostMapping("/add-exercise")
     public String addWorkoutExercise(@ModelAttribute WorkoutExercise workoutExercise,
-                                        @RequestParam("workoutId") Integer workoutId,
-                                        @RequestParam("selectedDate") String selectedDate) {
+                                     @RequestParam("workoutId") Integer workoutId,
+                                     @RequestParam("selectedDate") String selectedDate) {
         Workout workout = workoutService.findById(workoutId);
         workoutExercise.setWorkout(workout);
         workoutExerciseService.saveExercise(workoutExercise);
+
+
         return "redirect:/workout-exercise?workoutId=" + workout.getId() + "&selectedDate=" + selectedDate;
     }
 
@@ -73,10 +75,14 @@ public class WorkoutExerciseController {
     }
 
     @PostMapping("/delete")
-    public String deleteWorkoutExercise(@RequestParam("workoutId") Integer workoutId, @RequestParam("id") Integer id) {
+    public String deleteWorkoutExercise(@RequestParam("workoutId") Integer workoutId,
+                                        @RequestParam("id") Integer id,
+                                        @RequestParam("selectedDate") String selectedDate) {
         workoutExerciseService.deleteWorkoutExercise(id);
-        return "redirect:/workout-exercise?workoutId=" + workoutId;
+
+        return "redirect:/workout-exercise?workoutId=" + workoutId + "&selectedDate=" + selectedDate;
     }
+
 
     @GetMapping("/exercise/{id}")
     public String showExerciseDetails(@PathVariable("id") Integer exerciseId,

@@ -155,9 +155,15 @@
 
     <div class="actions">
         <a href="/calendar">Go to Calendar</a>
-        <a th:if="${selectedDate != null}" th:href="@{/daily-record(selectedDate=${selectedDate})}">Back to Daily Record</a>
 
+
+        <form th:action="@{/daily-record}" method="get">
+
+            <input type="hidden" name="selectedDate" th:value="${selectedDate}" />
+            <button type="submit" class="back-button">Back to Daily Record</button>
+        </form>
     </div>
+
 </div>
 
 </body>
