@@ -1,4 +1,4 @@
-package com.gymohrim.service.statistics;
+package com.gymohrim.it;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
