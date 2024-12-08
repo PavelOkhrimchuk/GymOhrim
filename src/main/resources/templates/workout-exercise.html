@@ -23,20 +23,23 @@
             min-height: 100vh;
             margin: 0;
             padding: 20px;
+            overflow-x: hidden;
         }
 
         .container {
             background-color: #FFFFFF;
             border-radius: 10px;
-            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
             padding: 40px;
             max-width: 800px;
             width: 100%;
+            overflow-x: auto;
         }
 
         h1, h2 {
             color: #FF4B2B;
             margin-bottom: 20px;
+            text-align: center;
         }
 
         form {
@@ -58,7 +61,6 @@
             border-radius: 5px;
             font-size: 14px;
         }
-
 
         button {
             background-color: #FF4B2B;
@@ -87,6 +89,7 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            word-wrap: break-word; /* Разрешает перенос текста внутри таблицы */
         }
 
         th, td {
@@ -100,23 +103,25 @@
             font-weight: bold;
         }
 
-        a {
+        td a {
             color: #FF4B2B;
             text-decoration: none;
-            margin-top: 20px;
-            display: inline-block;
         }
 
-        a:hover {
+        td a:hover {
             text-decoration: underline;
+        }
+
+        .actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
         }
 
         .error {
             color: red;
             margin-bottom: 15px;
-        }
-        .actions {
-            margin-top: 20px;
         }
 
         @media (max-width: 600px) {
@@ -130,6 +135,14 @@
 
             input, select {
                 font-size: 12px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 8px;
             }
         }
     </style>
