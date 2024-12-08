@@ -49,7 +49,7 @@ public class UserProfileService {
         try {
             if (userProfile.getId() != null && userProfileRepository.existsById(userProfile.getId())) {
                 log.debug("Updating existing user profile with ID: {}", userProfile.getId());
-                userProfileRepository.save(userProfile);  // Для обновления
+                userProfileRepository.save(userProfile);
             } else {
                 Optional<UserProfile> existingProfile = userProfileRepository.findByUser(userProfile.getUser());
                 if (existingProfile.isPresent()) {
@@ -60,10 +60,10 @@ public class UserProfileService {
                     existing.setGender(userProfile.getGender());
                     existing.setBirthDate(userProfile.getBirthDate());
                     existing.setProfilePictureUrl(userProfile.getProfilePictureUrl());
-                    userProfileRepository.save(existing);  // Для обновления
+                    userProfileRepository.save(existing);
                 } else {
                     log.debug("Saving new user profile");
-                    userProfileRepository.save(userProfile);  // Для создания нового
+                    userProfileRepository.save(userProfile);
                 }
             }
         } catch (Exception e) {

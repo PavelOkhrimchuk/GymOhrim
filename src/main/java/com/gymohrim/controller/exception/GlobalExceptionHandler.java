@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MissingServletRequestParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleMissingException(MissingServletRequestParameterException e, Model model) {
-        model.addAttribute("error", "Please create a workout first.");
+        model.addAttribute("error", "Exception with parameter. Please try again later.");
         return "error";
     }
 

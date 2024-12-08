@@ -27,8 +27,16 @@ public class WorkoutController {
     }
 
     @PostMapping("/end")
-    public String endWorkout(@RequestParam("workoutId") Integer workoutId) {
-        Workout workout = workoutService.endWorkout(workoutId);
+    public String endWorkout(@RequestParam(value = "workoutId", required = false) Integer workoutId,
+                             @RequestParam("dailyRecordId") Integer dailyRecordId) {
+        Workout workout;
+        if (workoutId == null) {
+
+            workout = workoutService.startWorkout(dailyRecordId);
+        } else {
+
+            workout = workoutService.endWorkout(workoutId);
+        }
         return "redirect:/daily-record?selectedDate=" + workout.getDailyRecord().getDate();
     }
 
